@@ -1,0 +1,85 @@
+####################################
+#
+# Provision script for MySQL server.
+
+$mysqlscript = <<-SCRIPT
+
+# Create dir for synced data exchange with host OS.
+mkdir /vagrant 2>/dev/null
+
+# Add hostnames to /etc/hosts.
+echo "192.168.200.11 mysql mysql.haxor.corp" >> /etc/hosts
+echo "192.168.200.12 www www.haxor.corp" >> /etc/hosts
+
+# Fill in the rest here...
+
+# End of script.
+SCRIPT
+
+####################################
+#
+# Provision script for Apache server with DVWA.
+
+$wwwscript = <<-SCRIPT
+# Create dir for synced data exchange with host OS.
+mkdir /vagrant 2>/dev/null
+
+# Add hostnames to /etc/hosts.
+echo "192.168.200.11 mysql mysql.haxor.corp" >> /etc/hosts
+echo "192.168.200.12 www.haxor.corp" >> /etc/hosts
+
+# Fill in the rest here...
+
+# End of script.
+SCRIPT
+
+
+####################################
+# 
+# Vagrant main configuration, creating two VMs.
+# Both VMs get /vagrant which is synced with this working dir. 
+# The working dir contains the Vagrantfile, plus two
+# prepared configuration files. 
+
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "generic/centos7"
+
+  config.vm.define :mysql do |mysql|
+    if Vagrant.has_plugin?("vagrant-vbguest")
+      mysql.vbguest.auto_update = false
+    end
+    mysql.vm.hostname = "mysql.haxor.corp"
+    # Switch these two, if Vagrant complains about "permission denied"
+    #mysql.vm.network "private_network", ip: "192.168.200.11", virtualbox__intnet: "dvwa"
+    mysql.vm.network "private_network", ip: "192.168.200.11"
+    ####
+    mysql.vm.synced_folder ".", "/vagrant"
+    mysql.vm.provider "virtualbox" do |v|
+      v.memory = 1024
+      v.cpus = 1
+    end
+    mysql.vm.provision "setup", type: "shell", inline: $mysqlscript
+  end
+
+  config.vm.define :www do |www|
+    if Vagrant.has_plugin?("vagrant-vbguest")
+      www.vbguest.auto_update = false
+    end
+    www.vm.hostname = "www.haxor.corp"
+    # Switch these two, if Vagrant complains about "permission denied"
+    #www.vm.network "private_network", ip: "192.168.200.12", virtualbox__intnet: "dvwa"
+    www.vm.network "private_network", ip: "192.168.200.12"
+    ###
+    www.vm.network "forwarded_port", guest: 80, host: 8080
+    www.vm.synced_folder ".", "/vagrant"
+    www.vm.provider "virtualbox" do |v|
+      v.memory = 512
+      v.cpus = 1
+    end
+    www.vm.provision "setup", type: "shell", inline: $wwwscript
+  end
+
+end
+
+
