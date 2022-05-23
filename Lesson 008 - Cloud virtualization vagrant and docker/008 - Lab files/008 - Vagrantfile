@@ -1,0 +1,65 @@
+$script = <<-SCRIPT
+apk add lighttpd
+echo "Hello! You're talking to:"  > /var/www/localhost/htdocs/index.html
+hostname >> /var/www/localhost/htdocs/index.html
+chmod 644 /var/www/localhost/htdocs/index.html
+rc-update add lighttpd default
+rc-service lighttpd restart
+SCRIPT
+
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "generic/alpine38"
+
+  config.vm.define :alpine1 do |alp1|
+    alp1.vm.hostname = "alpine1"
+    # Switch these two, if VirtualBox complains about "permission denied" on networking.
+    #alp1.vm.network "private_network", ip: "192.168.56.11", virtualbox__intnet: "08net"
+    alp1.vm.network "private_network", ip: "192.168.56.11"
+    ###
+    alp1.vm.network "forwarded_port", guest: 80, host: 8081
+    if Vagrant.has_plugin?("vagrant-vbguest")
+      alp1.vbguest.auto_update = false
+    end
+    alp1.vm.provider "virtualbox" do |v|
+      v.memory = 512
+      v.cpus = 1
+    end
+    alp1.vm.provision "setup", type: "shell", inline: $script
+  end
+
+  config.vm.define :alpine2 do |alp2|
+    alp2.vm.hostname = "alpine2"
+    # Switch these two, if VirtualBox complains about "permission denied" on networking.
+    #alp2.vm.network "private_network", ip: "192.168.56.12", virtualbox__intnet: "08net"
+    alp2.vm.network "private_network", ip: "192.168.56.12"
+    ###
+    alp2.vm.network "forwarded_port", guest: 80, host: 8082
+    if Vagrant.has_plugin?("vagrant-vbguest")
+      alp2.vbguest.auto_update = false
+    end
+    alp2.vm.provider "virtualbox" do |v|
+      v.memory = 512
+      v.cpus = 1
+    end
+    alp2.vm.provision "setup", type: "shell", inline: $script
+  end
+
+  config.vm.define :alpine3 do |alp3|
+    alp3.vm.hostname = "alpine3"
+    # Switch these two, if VirtualBox complains about "permission denied" on networking.
+    #alp3.vm.network "private_network", ip: "192.168.56.13", virtualbox__intnet: "08net"
+    alp3.vm.network "private_network", ip: "192.168.56.13"
+    ###
+    alp3.vm.network "forwarded_port", guest: 80, host: 8083
+    if Vagrant.has_plugin?("vagrant-vbguest")
+      alp3.vbguest.auto_update = false
+    end
+    alp3.vm.provider "virtualbox" do |v|
+      v.memory = 512
+      v.cpus = 1
+    end
+    alp3.vm.provision "setup", type: "shell", inline: $script
+  end
+
+end
