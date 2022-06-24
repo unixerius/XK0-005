@@ -8,8 +8,8 @@ $mysqlscript = <<-SCRIPT
 mkdir /vagrant 2>/dev/null
 
 # Add hostnames to /etc/hosts.
-echo "192.168.200.11 mysql mysql.haxor.corp" >> /etc/hosts
-echo "192.168.200.12 www www.haxor.corp" >> /etc/hosts
+echo "192.168.56.11 mysql mysql.haxor.corp" >> /etc/hosts
+echo "192.168.56.12 www www.haxor.corp" >> /etc/hosts
 
 # Install MariaDB, enable and start, plus open on the firewall.
 yum install -y mariadb-server 
@@ -39,8 +39,8 @@ $wwwscript = <<-SCRIPT
 mkdir /vagrant 2>/dev/null
 
 # Add hostnames to /etc/hosts.
-echo "192.168.200.11 mysql mysql.haxor.corp" >> /etc/hosts
-echo "192.168.200.12 www.haxor.corp" >> /etc/hosts
+echo "192.168.56.11 mysql mysql.haxor.corp" >> /etc/hosts
+echo "192.168.56.12 www.haxor.corp" >> /etc/hosts
 
 # Install Apache, MariaDB client and PHP plus modules
 # Also open up the firewall.
@@ -91,8 +91,8 @@ Vagrant.configure("2") do |config|
     mysql.vm.hostname = "mysql.haxor.corp"
     ###
     # Switch these two, if Vagrant complains about "permission denied" in networking.
-    #mysql.vm.network "private_network", ip: "192.168.200.11", virtualbox__intnet: "dvwanet"
-    mysql.vm.network "private_network", ip: "192.168.200.11"
+    #mysql.vm.network "private_network", ip: "192.168.56.11", virtualbox__intnet: "dvwanet"
+    mysql.vm.network "private_network", ip: "192.168.56.11"
     ###
     mysql.vm.synced_folder ".", "/vagrant"
     mysql.vm.provider "virtualbox" do |v|
@@ -107,8 +107,8 @@ Vagrant.configure("2") do |config|
     www.vm.hostname = "www.haxor.corp"
     ###
     # Switch these two, if Vagrant complains about "permission denied" in networking.
-    #www.vm.network "private_network", ip: "192.168.200.12", virtualbox__intnet: "dvwanet"
-    www.vm.network "private_network", ip: "192.168.200.12"
+    #www.vm.network "private_network", ip: "192.168.56.12", virtualbox__intnet: "dvwanet"
+    www.vm.network "private_network", ip: "192.168.56.12"
     ###
     www.vm.network "forwarded_port", guest: 80, host: 8080
     www.vm.synced_folder ".", "/vagrant"
