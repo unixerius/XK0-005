@@ -117,7 +117,7 @@ This returns:
 
 Use ctrl-C to abort. Then run:
 
-> ulimit -u 50
+> ulimit -u 20
 > for i in {1..12}
 > do
 > sleep 60 &
@@ -125,8 +125,71 @@ Use ctrl-C to abort. Then run:
 
 This should now work and start more sleeps in the background.
 
+Wait until all sleeps go away (or run "pkill sleep"). Now try to go over the new/temporary ulimit, by starting 20 sleeps (which will again go over the limit, because 20+1).
 
-## Lab: xxx
+> for i in {1..20}
+> do
+> sleep 60 &
+> done
+
+Starting the final sleep should fail again.
 
 
+## Lab: SELinux
+
+These labs are "follow-along" with the slides. There is no separate walk-through
+
+
+## Lab: AppArmor
+
+These labs are "follow-along" with the slides. There is no separate walk-through
+
+
+## Lab: SSH recap
+
+### Assignment 1: new keys
+
+Generate a new key pair on one of the accounts.  Make it type ECDSA, with a password.
+
+* ssh-keygen -t ecdsa -f ~/.ssh/id_ecdsa-new
+    * Enter a passphrase when asked for one!
+
+Setup its pub.key for authentication on the other VM. In my case, I'm sending it to my Ubuntu VM.
+
+* ssh-copy-id -i ~/.ssh/id_ecdsa-new.pub tess@ubuntu
+    * This asks for my account's password, on the ubuntu host.
+
+Test your SSH key authentication. 
+
+* ssh -i ~/.ssh/id_ecdsa-new tess@ubuntu
+    * This asks for the passphrase on the new key pair.
+
+
+### Assignment 2: ssh-agent
+
+SSH-agent is a piece of software which allows you to securely load your private key into memory, by entering its passphrase once. From the on, as long as your agent remains running and as long as you tell your shell how to find it, you will no longer need to enter the passphrase.
+
+Run:
+* eval $(ssh-agent)
+* ssh-add ~/.ssh/id_ecdsa-new
+    * This asks for the passphrase ONCE.
+* ssh -i ~/.ssh/id_ecdsa-new tess@ubuntu
+    * This should no longer ask for your password.
+
+
+### Assignment 3: restrict SSH access
+
+The lab asks: "Reconfigure "sshd_config" on one of the VMs, so it will only allow group "sshusers" to login."
+
+On the target host, run:
+
+* sudo groupadd sshusers
+* sudo usermod -a -G sshusers $(whoami)
+    * Check if the "dummy" user exists, with a proper password.
+    * Check if it can SSH into the target host at this point.
+* sudo vi /etc/ssh/sshd_config
+    * At the bottom, add: AllowGroups sshusers
+* sudo systemctl restart sshd
+
+Now test if you can SSH into the target host. This should work. Then also test that "dummy" cannot SSH into the host (they don't have the right group). 
 
