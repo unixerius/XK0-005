@@ -1,0 +1,158 @@
+= Extra assignments =
+
+== Solution E1 ==
+
+cut -d: -f1,7 /etc/passwd
+
+=== Example output ===
+
+root:/bin/bash
+daemon:/usr/bin/nologin
+tess:/bin/bash
+
+
+== Solution E2 ==
+
+cut -d: -f1,7 /etc/passwd | tr ':' ' '
+
+=== Example output ===
+
+root /bin/bash
+daemon /usr/bin/nologin
+tess /bin/bash
+
+
+== Solution E3 ==
+
+cut -d: -f1,7 /etc/passwd | tr ':' ' ' | while read Name Shell
+do
+    echo "User ${Name} has shell ${Shell}."
+done
+
+=== Example output ===
+
+User root has shell /bin/bash.
+User daemon has shell /usr/bin/nologin.
+User tess has shell /bin/bash.
+
+
+== Solution E4 ==
+
+One good guess is that the field would have "uid" or "UID", or "Uid" or something in it. 
+
+You can grep case-insensitive in the file, using "-i".
+
+grep -i uid /etc/login.defs
+
+That gives you a few options. It looks like we're looking for "UID_MIN".
+
+There are two complicating matters:
+* The file login.defs does not have proper space/tab delimitation.
+* The file also has other entries with "UID_MIN". 
+
+To restrict our output to the field we want, we can grep on lines that START with "UID_MIN".
+
+To make sure we only get the actual value, we can abuse the "awk" command to print the second field. I know, it's nasty.
+
+grep -i ^UID_MIN /etc/login.defs | awk '{print $2}'
+
+== Example output ===
+
+1000
+
+
+== Solution E5 ==
+
+#!/bin/bash
+UID_MIN=$(grep -i ^UID_MIN /etc/login.defs | awk '{print $2}')
+echo "The value of UID_MIN is: ${UID_MIN}."
+
+=== Example output ===
+
+$ ./userchecks.sh
+The value of UID_MIN is: 1000.
+
+
+== Solution E6 ==
+
+#!/bin/bash
+UID_MIN=$(grep -i ^UID_MIN /etc/login.defs | awk '{print $2}')
+echo "The value of UID_MIN is: ${UID_MIN}."
+
+cut -d: -f1,7 /etc/passwd | tr ':' ' ' | while read Name Shell
+do
+    echo "User ${Name} has shell ${Shell}."
+done
+
+=== Example output ===
+
+$ ./userchecks.sh
+The value of UID_MIN is: 1000.
+User root has shell /bin/bash.
+User daemon has shell /usr/bin/nologin.
+User tess has shell /bin/bash.
+
+
+== Solution E7 ==
+
+#!/bin/bash
+UID_MIN=$(grep -i ^UID_MIN /etc/login.defs | awk '{print $2}')
+echo "The value of UID_MIN is: ${UID_MIN}."
+
+cut -d: -f1,3,7 /etc/passwd | tr ':' ' ' | while read Name Uid Shell
+do
+    if [[ ${Uid} -ge ${UID_MIN} ]]
+    then
+        echo "User ${Name} has shell ${Shell}."
+    fi
+done
+
+=== Example output ===
+
+$ ./userchecks.sh
+The value of UID_MIN is: 1000.
+User tess has shell /bin/bash.
+
+
+== Solution E8 ==
+
+#!/bin/bash
+UID_MIN=$(grep -i ^UID_MIN /etc/login.defs | awk '{print $2}')
+echo "The value of UID_MIN is: ${UID_MIN}."
+
+cut -d: -f1,3,7 /etc/passwd | tr ':' ' ' | while read Name Uid Shell
+do
+    if [[ ${Uid} -ge ${UID_MIN} ]]
+    then
+        if [[ ! -z $(grep ${Shell} /etc/shells) ]]
+        then
+            echo "User ${Name} has shell ${Shell}. The ARE allowed to work on this host."
+        else
+            echo "User ${Name} has shell ${Shell}. The are NOT allowed to work on this host.""
+        fi
+    fi
+done
+
+=== Example output ===
+
+$ ./userchecks.sh
+The value of UID_MIN is: 1000.
+User tess has shell /bin/bash. They ARE allowed to work on this host.
+
+
+== Solution E9 ==
+
+Use the script you made, to create user accounts. This is nice and fast.
+
+Edit /etc/passwd, so you change the shell for a few of these accounts. Set these to "bad" shells. 
+
+=== Example output ===
+
+$ ./userchecks.sh
+The value of UID_MIN is: 1000.
+User tess has shell /bin/bash. They ARE allowed to work on this host.
+User user1 has shell /bin/bash. They ARE allowed to work on this host.
+User user2 has shell /usr/bin/false. They are NOT allowed to work on this host.
+User user3 has shell /usr/sbin/nologin. They are NOT allowed to work on this host.
+
+

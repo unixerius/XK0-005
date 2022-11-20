@@ -1,0 +1,122 @@
+= Extra assignments =
+
+== Task E1 ==
+
+Create a command which you can use to only read usernames and their shells from /etc/passwd.
+
+=== Example output ===
+
+root:/bin/bash
+daemon:/usr/bin/nologin
+tess:/bin/bash
+
+
+== Task E2 ==
+
+Create a command, based on E1, which outputs the usernames and shells from /etc/passwd, separated by a space.
+
+=== Example output ===
+
+root /bin/bash
+daemon /usr/bin/nologin
+tess /bin/bash
+
+== Task E3 ==
+
+Combine the command from E2 with a loop, so you can print a line that says "User X has shell Y.".
+
+Hint: the "read" command can fill more than one variable, if you give it more than one variable name. For example, the following will create three variables.
+
+echo "One two three" | read var1 var2 var3\
+
+=== Example output ===
+
+User root has shell /bin/bash.
+User daemon has shell /usr/bin/nologin.
+User tess has shell /bin/bash.
+
+
+== Task E4 ==
+
+The configuration file /etc/login.defs has a field, which defines the number at which "normal" user IDs start. 
+
+Can you find this field, using grep? 
+
+Write a command which greps this line from /etc/login.defs and ONLY gives you the number UID.
+
+=== Example output ===
+
+1000
+
+
+== Task E5 ==
+
+Start a new shell script file, called "userchecks.sh".
+
+Begin this shell script with the usual "hashbang", then use what you learned in E4 to fill variable "UID_MIN" with the value from /etc/login.defs.
+
+As a quick test, make the shell script tell you the value that it read.
+
+=== Example output ===
+
+$ ./userchecks.sh
+The value of UID_MIN is: 1000.
+
+
+== Task E6 ==
+
+Expand your "userchecks.sh" script, with the loop you built in E3.
+
+=== Example output ===
+
+$ ./userchecks.sh
+The value of UID_MIN is: 1000.
+User root has shell /bin/bash.
+User daemon has shell /usr/bin/nologin.
+User tess has shell /bin/bash.
+
+
+== Task E7 ==
+
+Expand your "userchecks.sh" script, so the for-loop now only shows "real" users with a UID greater than, or equal to, UID_MIN.
+
+=== Example output ===
+
+$ ./userchecks.sh
+The value of UID_MIN is: 1000.
+User tess has shell /bin/bash.
+
+
+== Task E8 ==
+
+The configuration file /etc/shells has a list of shells that are allowed to be used upon login. If a user's shell is not in the list, they will not be allowed to work on the system via SSH etc. 
+
+Expand your "userchecks.sh" script, so the for-loop tells you if the user will be allowed to work on the system. 
+
+Hint: you will need to see if the shell which you read into a variable is in /etc/shells. Based on that, you will need to change your output.
+
+=== Example output ===
+
+$ ./userchecks.sh
+The value of UID_MIN is: 1000.
+User tess has shell /bin/bash. They ARE allowed to work on this host.
+
+
+== Task E9 ==
+
+Think of a way in which you can further test task E8.
+
+In lesson 4 you created a shell script that makes new users, right? You can use that to quickly create a number of dummy accounts. You can then edit /etc/passwd to give a few of them different / wrong shells. 
+
+Do this! :) Then test your "userchecks.sh" to see if it works. 
+
+=== Example output ===
+
+$ ./userchecks.sh
+The value of UID_MIN is: 1000.
+User tess has shell /bin/bash. They ARE allowed to work on this host.
+User user1 has shell /bin/bash. They ARE allowed to work on this host.
+User user2 has shell /usr/bin/false. They are NOT allowed to work on this host.
+User user3 has shell /usr/sbin/nologin. They are NOT allowed to work on this host.
+
+
