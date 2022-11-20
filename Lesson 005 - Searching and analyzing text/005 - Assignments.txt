@@ -9,6 +9,7 @@ Sometimes the space offered by a slide is just not enough to make an assignment 
 == Assignment 1 ==
 
 Create a script which takes two forms on input:
+
 1. One from a parameter passed on the command line.
     This should be a name. e.g. “Tess”.
 2. Another, from interactive input from the user.
@@ -91,15 +92,11 @@ Creating user4
 
 == Assignment 4 ==
 
-Write a shell script which reads two parameters from the command line:
+Write a shell script which reads one parameter from the command line:
 
-1. A base IP address, for a network IP address range. e.g. 192.168.0.0.
-2. A decimal netmask. e.g. 24.
+1. The first three octets of an IPv4 address, like: 192.168.0
 
-The shell script should calculate the right set of IP addresses to test the full range, as indicated. To make things easier, you can choose to:
-
-* Only allow /24 netmasks. e.g. 192.168.0.[1-254]
-* Only allow /8, /16 or /24 netmasks. e.g. 192.[0-255].[0-255].[1.254] for /8, 192.168.[0-255].[1.254] for /16.
+The shell script should loop through the valid IP addresses for this range, e.g. 192.168.0.[1-254].
 
 The script will need to then loop through all the IP addresses that are valid and test if that host is available on the network. This can be done using “ping -c 1” (to simply test with one single ping).
 
@@ -109,14 +106,13 @@ There are different ways to test if the ping was successful (like grep-ing in th
 
 Optional coding ideas include: 
 
-* Test that the netmask is actually 24, or 8/16/24, or 1-31.
-* Test that the netmask is actually a number, not text.
+* Validate that the input really is three octets, so [1-255] followed by a dot, followed by [0-255], followed by a dot and again by [0-255].
 * Test with a regular expression of the base IP is actually an IP address.
 * Add parallelism, so you can test multiple pings at the same time. 
 
 === Example output ===
 
-./pingsweep 10.0.2.0 24
+./pingsweep 10.0.2
 10.0.2.4 is up 
 10.0.2.6 is up
 
