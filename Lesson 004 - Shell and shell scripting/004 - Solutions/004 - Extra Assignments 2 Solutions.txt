@@ -62,7 +62,7 @@ How many? 5
 #!/bin/bash
 read -p "How many?" NUM
 
-if [[ -z $(echo ${NUM} | grep ^[[:digit]]*$)]]
+if [[ -z $(echo ${NUM} | grep ^[[:digit:]]*$)]]
 then
     echo "That's not a number!"
     exit 1
@@ -99,7 +99,7 @@ How many? 2
 #!/bin/bash
 read -p "How many?" NUM
 
-if [[ -z $(echo ${NUM} | grep ^[[:digit]]*$)]]
+if [[ -z $(echo ${NUM} | grep ^[[:digit:]]*$)]]
 then
     echo "That's not a number!"
     exit 1
@@ -132,7 +132,7 @@ $ ls bomb
 #!/bin/bash
 read -p "How many?" NUM
 
-if [[ -z $(echo ${NUM} | grep ^[[:digit]]*$)]]
+if [[ -z $(echo ${NUM} | grep ^[[:digit:]]*$)]]
 then
     echo "That's not a number!"
     exit 1
@@ -183,7 +183,7 @@ dd if=/dev/random of=./randomfile bs=1k count=1
 #!/bin/bash
 read -p "How many?" NUM
 
-if [[ -z $(echo ${NUM} | grep ^[[:digit]]*$)]]
+if [[ -z $(echo ${NUM} | grep ^[[:digit:]]*$)]]
 then
     echo "That's not a number!"
     exit 1
@@ -239,7 +239,7 @@ $ file bomb/3/2
 #!/bin/bash
 read -p "How many?" NUM
 
-if [[ -z $(echo ${NUM} | grep ^[[:digit]]*$)]]
+if [[ -z $(echo ${NUM} | grep ^[[:digit:]]*$)]]
 then
     echo "That's not a number!"
     exit 1
