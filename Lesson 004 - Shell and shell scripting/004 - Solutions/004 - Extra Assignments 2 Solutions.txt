@@ -1,0 +1,293 @@
+= Extra assignments =
+
+== Task E1 ==
+
+for NUM in {1..5}
+do
+echo ${NUM}
+done
+
+=== Example output ===
+
+1
+2
+3
+4
+5
+
+
+== Task E2 ==
+
+#!/bin/bash
+read -p "How many?" NUM
+
+echo "You wanted ${NUM}."
+
+=== Example output ===
+
+$ ./dir-bomb.sh
+How many? 3
+You wanted 3.
+
+
+
+== Task E3 ==
+
+For this one, you cannot use the "{1..$NUM}" construct. That's not how the Bash range notation works. You will need to use a different option. 
+
+One nice solution is to use the "seq" command.
+
+
+#!/bin/bash
+read -p "How many?" NUM
+
+for COUNT in $(seq 1 ${NUM})
+do
+    echo ${COUNT}
+done
+
+=== Example output ===
+
+$ ./dir-bomb.sh
+How many? 5
+1
+2
+3
+4
+5
+
+
+== Task E4 ==
+
+#!/bin/bash
+read -p "How many?" NUM
+
+if [[ -z $(echo ${NUM} | grep ^[[:digit]]*$)]]
+then
+    echo "That's not a number!"
+    exit 1
+elif [[ ${NUM} -gt 100 ]]
+then
+    echo "That's too much!"
+    exit 1
+fi
+
+for COUNT in $(seq 1 ${NUM})
+do
+    echo ${COUNT}
+done
+
+
+=== Example output ===
+
+$ ./dir-bomb.sh
+How many? a
+That's not a number!
+
+$ ./dir-bomb.sh
+How many? 1000
+That's too many!
+
+$ ./dir-bomb.sh
+How many? 2
+1
+2
+
+
+== Task E5 ==
+
+#!/bin/bash
+read -p "How many?" NUM
+
+if [[ -z $(echo ${NUM} | grep ^[[:digit]]*$)]]
+then
+    echo "That's not a number!"
+    exit 1
+elif [[ ${NUM} -gt 100 ]]
+then
+    echo "That's too much!"
+    exit 1
+fi
+
+mkdir ./bomb
+
+for COUNT in $(seq 1 ${NUM})
+do
+    mkdir bomb/${COUNT}
+done
+
+
+
+=== Example output ===
+
+$ ./dir-bomb.sh
+How many? 5
+
+$ ls bomb
+1 2 3 4 5
+
+
+== Task E6 ==
+
+#!/bin/bash
+read -p "How many?" NUM
+
+if [[ -z $(echo ${NUM} | grep ^[[:digit]]*$)]]
+then
+    echo "That's not a number!"
+    exit 1
+elif [[ ${NUM} -gt 100 ]]
+then
+    echo "That's too much!"
+    exit 1
+fi
+
+mkdir ./bomb
+
+for COUNT in $(seq 1 ${NUM})
+do
+    mkdir bomb/${COUNT}
+
+    for SUBCOUNT in $(seq 1 ${NUM})
+    do
+        mkdir bomb/${COUNT}/${SUBCOUNT}
+    done
+done
+
+=== Example output ===
+
+$ ./dir-bomb.sh
+How many? 5
+
+$ ls bomb
+1 2 3 4 5
+
+$ ls bomb/1
+1 2 3 4 5
+
+$ ls bomb/3
+1 2 3 4 5
+
+
+== Task E7 ==
+
+dd if=/dev/random of=./randomfile bs=1k count=1
+
+=== Example output ===
+
+...
+
+
+== Task E8 ==
+
+#!/bin/bash
+read -p "How many?" NUM
+
+if [[ -z $(echo ${NUM} | grep ^[[:digit]]*$)]]
+then
+    echo "That's not a number!"
+    exit 1
+elif [[ ${NUM} -gt 100 ]]
+then
+    echo "That's too much!"
+    exit 1
+fi
+
+mkdir ./bomb
+
+for COUNT in $(seq 1 ${NUM})
+do
+    mkdir bomb/${COUNT}
+
+    for SUBCOUNT in $(seq 1 ${NUM})
+    do
+        mkdir bomb/${COUNT}/${SUBCOUNT}
+
+        for FILE in $(seq 1 ${NUM})
+        do
+            dd if=/dev/random of="bomb/${COUNT}/${SUBCOUNT}/${FILE}" bs=1k count=1
+        done
+    done
+done
+
+=== Example output ===
+
+$ ./dir-bomb.sh
+How many? 5
+
+$ ls bomb
+1 2 3 4 5
+
+$ ls bomb/1
+1 2 3 4 5
+
+$ ls bomb/3
+1 2 3 4 5
+
+$ ls bomb/3/2
+1 2 3 4 5
+
+$ file bomb/3
+3: directory
+
+$ file bomb/3/2
+2: data
+
+
+== Task E9 ==
+
+#!/bin/bash
+read -p "How many?" NUM
+
+if [[ -z $(echo ${NUM} | grep ^[[:digit]]*$)]]
+then
+    echo "That's not a number!"
+    exit 1
+elif [[ ${NUM} -gt 100 ]]
+then
+    echo "That's too much!"
+    exit 1
+fi
+
+mkdir ./bomb
+
+for COUNT in $(seq 1 ${NUM})
+do
+    mkdir bomb/${COUNT}
+
+    for SUBCOUNT in $(seq 1 ${NUM})
+    do
+        mkdir bomb/${COUNT}/${SUBCOUNT}
+
+        for FILE in $(seq 1 ${NUM})
+        do
+            dd if=/dev/random of="bomb/${COUNT}/${SUBCOUNT}/${FILE}" bs=1k count=1
+        done
+    done
+done
+
+read -p "Ready to clean up?" ANSWER
+
+case ${ANSWER} in
+y|Y|yes) echo "Cleaning up.";rm -r bomb;;
+y|Y|yes) echo "Not cleaning." ;;
+*) echo "Not cleaning." ;;
+esac
+
+=== Example output ===
+
+$ ./dir-bomb.sh
+How many? 5
+Ready to clean up? n
+Not cleaning.
+
+$ ls bomb
+1 2 3 4 5
+
+$ ./dir-bomb.sh
+How many? 5
+Ready to clean up? y
+Cleaning up.
+
+$ ls bomb
+ls: bomb: No such file or directory

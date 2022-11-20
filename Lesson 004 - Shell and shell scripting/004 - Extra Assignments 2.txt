@@ -1,0 +1,179 @@
+= Extra assignments =
+
+== Task E1 ==
+
+Make a loop which cycles through the numbers 1-20. Make it print the number on screen.
+
+=== Example output ===
+
+for NUM in {1..20}
+do
+    echo "${NUM}"
+done
+
+
+== Task E2 ==
+
+Start a new shell script, called "dir-bomb.sh".
+
+Begin this script with the usual "hashbang". Have it ask the user for a number and print it back to the user. 
+
+
+=== Example output ===
+
+$ ./dir-bomb.sh
+How many? 3
+You wanted 3.
+
+
+
+== Task E3 ==
+
+Combine E1 and E2. Have the script loop from 1 to the number given by the user.
+
+=== Example output ===
+
+$ ./dir-bomb.sh
+How many? 5
+1
+2
+3
+4
+5
+
+
+== Task E4 ==
+
+Expand the shell script to test for two things:
+
+1. The user input must be a number.
+2. The user input must be less than or equal to 100. 
+
+Hint: if you google for the following, you can probably find some nice examples.
+
+* bash [[:digit:]]
+* bash [[:alnum:]]
+
+You will be using grep with an interesting regular expression.
+
+This will be a hard one! You will need to combine ^ ("starts with"), * (repeat) and $ (ends with).
+
+
+=== Example output ===
+
+$ ./dir-bomb.sh
+How many? a
+That's not a number!
+
+$ ./dir-bomb.sh
+How many? 1
+1
+
+
+== Task E5 ==
+
+Expand your shell script. 
+
+Let the shell script make a directory called "bomb".
+
+Inside the "bomb" directory, have the script make a subdirectory for each number you loop through.
+
+
+=== Example output ===
+
+$ ./dir-bomb.sh
+How many? 5
+
+$ ls bomb
+1 2 3 4 5
+
+
+== Task E6 ==
+
+Expand your shell script, so it will make a subdirectory inside each subdirectory, for each number in the loop. 
+
+For example, if you say "3", it will make three directories in "bomb", each of which will have three subdirectories of its own. 
+
+=== Example output ===
+
+$ ./dir-bomb.sh
+How many? 5
+
+$ ls bomb
+1 2 3 4 5
+
+$ ls bomb/1
+1 2 3 4 5
+
+$ ls bomb/3
+1 2 3 4 5
+
+
+== Task E7 ==
+
+Learn about the "dd" command a little bit. Use it read random data from /dev/random. Limit your read to 1kB (one kilo-byte) of random data.
+
+If you want to test this safely, send your output to /dev/null.
+
+If you forget to redir to null, your terminal may get confused a bit. If this happens, type the "reset" command to get your terminal normal again. 
+
+=== Example output ===
+
+...
+
+
+== Task E8 ==
+
+Expand your shell script. Use the command from E7, to make files inside each of the sub-sub-directories. One file for each number in the loop, each file filled with 1kB of random data.
+
+If you pick "3", you will get bomb, with three subdirectories, each of which has three subdirectories, each of which has three files with random garbage.
+
+=== Example output ===
+
+$ ./dir-bomb.sh
+How many? 5
+
+$ ls bomb
+1 2 3 4 5
+
+$ ls bomb/1
+1 2 3 4 5
+
+$ ls bomb/3
+1 2 3 4 5
+
+$ ls bomb/3/2
+1 2 3 4 5
+
+$ file bomb/3
+3: directory
+
+$ file bomb/3/2
+2: data
+
+
+== Task E9 ==
+
+Expand your shell script so it asks the user if they are ready to cleanup.
+
+* If the input is "y", "Y" or "yes", you should clean up the bomb directory with one command.
+* If the input is "n", "N" or "no", leave the files where they are.
+* Other input? Leave the files where they are.
+
+=== Example output ===
+
+$ ./dir-bomb.sh
+How many? 5
+Ready to clean up? n
+Not cleaning.
+
+$ ls bomb
+1 2 3 4 5
+
+$ ./dir-bomb.sh
+How many? 5
+Ready to clean up? y
+Cleaning up.
+
+$ ls bomb
+ls: bomb: No such file or directory
