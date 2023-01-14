@@ -1,0 +1,26 @@
+set up SSH key auth
+first to localhost by copying/cat-ing
+then with ssh-copy-id to targets
+
+investigate the files
+inventory.txt
+basics.yml
+
+some first things
+ansible -i inventory.txt web -m shell -a "hostname"
+ansible -i inventory.txt all -m shell -a "whoami"
+
+running the playbook
+ansible-playbook -i inventory.txt all --syntax-check basics.yml
+ansible-playbook -i inventory.txt all --check basics.yml
+ansible-playbook -i inventory.txt all basics.yml
+
+Also re-run
+Also try to break and then re-run
+
+running the playbook
+ansible-playbook -i inventory.txt all --syntax-check webserver.yml
+ansible-playbook -i inventory.txt all --check webserver.yml
+ansible-playbook -i inventory.txt all webserver.yml
+test on the port forward, http://localhost:8081 / 8082
+test in the VM network, from ubuntu
