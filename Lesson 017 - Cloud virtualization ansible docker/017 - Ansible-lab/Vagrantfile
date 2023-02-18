@@ -15,7 +15,8 @@ systemctl start chrony
 groupadd ansible
 usermod -a -G ansible vagrant
 cp -r /vagrant/ansible /var/ansible
-cp -r /vagrant/k8s /var/k8s
+
+cp /vagrant/ansible.cfg /etc/ansible.cfg
 
 cd /var/ansible
 git init
@@ -41,40 +42,21 @@ apk add python3 git uuidgen chrony
 addgroup ansible           # Alpine does not have groupadd
 addgroup vagrant ansible   # Alpine does not have usermod
 
-cp -r /vagrant/k8s /var/k8s
-
-echo "br_netfilter" > /etc/modules-load.d/k8s.conf
-modprobe br_netfilter
-echo "net.bridge.bridge-nf-call-iptables=1" >> /etc/sysctl.conf
-echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.conf
-echo "net.bridge.bridge-nf-call-ip6tables = 1" >> /etc/sysctl.conf
-
-uuidgen > /etc/machine-id
-
-#/sbin/setup-ntp chrony
-
-cat > /etc/apk/repositories << EOF
-http://dl-cdn.alpinelinux.org/alpine/v3.15/main
-http://dl-cdn.alpinelinux.org/alpine/v3.15/community
-http://dl-cdn.alpinelinux.org/alpine/edge/community
-http://dl-cdn.alpinelinux.org/alpine/edge/testing
-EOF
-
 TARGETSCRIPT
 
 
 ##########
 # Defining the five Ansible target hosts.
 servers = {
-   "ansible.ansible.lab" => ["generic/centos7", 1, 256, 20, "192.168.210.10" ]
+   "ansible.ansible.lab" => ["generic/centos7", 2, 512, 20, "192.168.210.10" ]
 }
 
 targets = {
-   "target1.ansible.lab" => ["generic/alpine315", 1, 2048, 10, "192.168.210.11", 8081 ],
-   "target2.ansible.lab" => ["generic/alpine315", 1, 2048, 10, "192.168.210.12", 8082 ],
-   "target3.ansible.lab" => ["generic/alpine315", 1, 2048, 10, "192.168.210.13", 8083 ],
-   "target4.ansible.lab" => ["generic/alpine315", 1, 256, 10, "192.168.210.14", 8084 ],
-   "target5.ansible.lab" => ["generic/alpine315", 1, 256, 10, "192.168.210.15", 8085 ]
+   "target1.ansible.lab" => ["generic/alpine317", 2, 512, 10, "192.168.210.11", 8081 ],
+   "target2.ansible.lab" => ["generic/alpine317", 2, 512, 10, "192.168.210.12", 8082 ],
+   "target3.ansible.lab" => ["generic/alpine317", 2, 512, 10, "192.168.210.13", 8083 ],
+   "target4.ansible.lab" => ["generic/alpine317", 2, 512, 10, "192.168.210.14", 8084 ],
+   "target5.ansible.lab" => ["generic/alpine317", 2, 512, 10, "192.168.210.15", 8085 ]
 }
 
 

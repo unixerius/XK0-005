@@ -4,6 +4,7 @@ ansible.ansible.lab
 [web]
 target1.ansible.lab
 target2.ansible.lab
+target3.ansible.lab
 
 [others]
 target3.ansible.lab
