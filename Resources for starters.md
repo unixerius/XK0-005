@@ -19,6 +19,8 @@
 
 [KodeKloud Engineer](https://legacy.kodekloud.com/p/kodekloud-engineer)
 
+[Shawn Powers' free Linux+ YouTube course](https://www.youtube.com/playlist?list=PL78ppT-_wOmuwT9idLvuoKOn6UYurFKCp)
+
 
 ## Advanced
 [PluralSight's Bash scripting course](https://app.pluralsight.com/library/courses/creating-shell-scripts-enterprise-linux)
