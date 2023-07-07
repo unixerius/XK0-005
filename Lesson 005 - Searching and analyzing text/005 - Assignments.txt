@@ -137,6 +137,7 @@ These inputs should be combined into a greeting, e.g. “Hello Tess!”.
 You could:
 
 * Add an extra flag/parameter (so $2), which will reset the greeting in the file if it’s “-r”.
+* Make the configuration file store greetings on a per-user basis. So for example "Tess:hello".
 
 === Example output ===
 
