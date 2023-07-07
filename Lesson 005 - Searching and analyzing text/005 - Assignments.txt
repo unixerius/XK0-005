@@ -6,7 +6,7 @@ Sometimes the space offered by a slide is just not enough to make an assignment 
 
 
 
-== Assignment 1 ==
+== Assignment 1 (from class 004) ==
 
 Create a script which takes two forms on input:
 
@@ -19,10 +19,7 @@ These inputs should be combined into a greeting, e.g. “Hello Tess!”.
 
 === Defensive coding ===
 
-You could:
-
-* Store the greeting in a file and test if it exists. If not, ask for a greeting, else re-use.
-* Add an extra flag/parameter (so $2), which will reset the greeting in the file if it’s “-r”.
+n.a.
 
 === Example output ===
 
@@ -34,7 +31,7 @@ Hello Tess!
 
 
 
-== Assignment 2 ==
+== Assignment 2 (from class 004)  ==
 
 === 2a ===
 
@@ -53,7 +50,7 @@ After asking for your password, the output should consist of a listing of all fi
 
 
 
-== Assignment 3 ==
+== Assignment 3 (from class 004)  ==
 
 We will create a shell script which either creates or removes a number of extra, dummy users. This may be useful for later labs!
 
@@ -90,7 +87,7 @@ Creating user4
 
 
 
-== Assignment 4 ==
+== Assignment 4 (from class 004) ==
 
 Write a shell script which reads one parameter from the command line:
 
@@ -116,6 +113,49 @@ Optional coding ideas include:
 10.0.2.4 is up 
 10.0.2.6 is up
 
+
+=============== New Assignments for class 005 ===============
+
+== Assignment 1 Evolved (building on class 004) ==
+
+Adjust the greeting.sh script which you created earlier. 
+
+1. One from a parameter passed on the command line.
+    This should be a name. e.g. “Tess”.
+2. Another, from interactive input from the user.
+    Ask the user which greeting they would like. e.g. “Hello”.
+3. The desired greeting from step 2 should be stored in a configuration file.
+    For example greeting.cfg.
+4. Every time you run greeting.sh, check if the configuration file exists.
+    If it does exist, you do NOT read the desired greeting from stdin.
+    Instead, read the greeting from the configuration file.
+
+These inputs should be combined into a greeting, e.g. “Hello Tess!”.
+
+=== Defensive coding ===
+
+You could:
+
+* Add an extra flag/parameter (so $2), which will reset the greeting in the file if it’s “-r”.
+
+=== Example output ===
+
+./greeting.sh Tess
+How would you like to be greeted?
+Hello
+
+Hello Tess!
+
+./greeting.sh Tess
+Hello Tess!
+
+rm ./greeting.sh
+
+./greeting.sh Tess
+How would you like to be greeted?
+Hello
+
+Hello Tess!
 
 
 == Assignment 5 ==
