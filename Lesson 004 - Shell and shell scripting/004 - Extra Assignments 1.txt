@@ -2,7 +2,7 @@
 
 == Task E1 ==
 
-Create a command which you can use to only read usernames and their shells from /etc/passwd.
+Write a command which you can use to only read usernames and their shells from /etc/passwd.
 
 === Example output ===
 
@@ -13,7 +13,7 @@ tess:/bin/bash
 
 == Task E2 ==
 
-Create a command, based on E1, which outputs the usernames and shells from /etc/passwd, separated by a space.
+Write a command, based on E1, which outputs the usernames and shells from /etc/passwd, separated by a space.
 
 === Example output ===
 
