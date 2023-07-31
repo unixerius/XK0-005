@@ -11,7 +11,7 @@
 
 
 ## Early on, for beginners
-[LinuxJourney.com](https://www.linuxjourney.com/)
+[Linux Voyage](https://linuxvoyage.github.io) (forked from Linux Journey)
 
 [OverTheWire's Bandit](https://overthewire.org/wargames/bandit/)
 
