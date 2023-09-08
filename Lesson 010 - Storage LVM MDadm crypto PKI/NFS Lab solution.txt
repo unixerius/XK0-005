@@ -1,0 +1,51 @@
+On the Ubuntu VM, you will need to install an NFS server.
+
+After that, you will need to configure it to export /var/userdata as a share.
+
+First find and install the right packages. Then find the config file under /etc.
+
+	sudo apt search nfs | grep -i server
+	sudo apt install nfs-ganesha nfs-ganesha-vfs
+	sudo mkdir /var/userdata
+	sudo find /etc -name "ganesha*"
+	sudo vi /etc/ganesha/ganesha.conf
+
+You will need to add the following configuration to "ganesha.conf":
+
+	EXPORT
+	{
+		Export_ID = 1;           # this can be any unique number
+		Path = /var/userdata;
+		Pseudo = /var/userdata;
+		FSAL {
+			Name = VFS;
+		}
+	}
+
+
+Then continue, so the export becomes available. First find the right service, then restart the service, check the logs and test if the export is available.
+
+	sudo systemctl list-unit-files | grep -i ganesha
+	sudo systemctl restart nfs-ganesha
+	sudo systemctl status nfs-ganesha
+
+	sudo cat /var/log/ganesha/ganesha.log
+	sudo showmount -e localhost
+	sudo touch /var/userdata/secret.txt
+ 
+
+Then, on the Fedora VM make sure there's an NFS client.
+
+	sudo yum search nfs
+	sudo yum install nfsv4-client-utils
+
+Test if you can see the exported share and then mount it. 
+
+	showmount -e ubuntu   
+	sudo mkdir /mnt/userdata
+	sudo mount -t nfs ubuntu:/var/userdata /mnt/userdata
+ 
+Then test if you see the file that we made on Ubuntu.
+
+	sudo ls -al /mnt/userdata/secret.txt
+
