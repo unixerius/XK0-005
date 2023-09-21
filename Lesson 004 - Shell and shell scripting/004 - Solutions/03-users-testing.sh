@@ -17,6 +17,7 @@ done
 # First the basic script.
 
 # Without input checking, it should not care about this mistake.
+# It should also fail, because you don't indicate an action.
 OUTPUT=$(./03-users.sh 2>&1<< EOF
 3
 EOF
@@ -24,6 +25,7 @@ EOF
 [[ ($? -eq 0) ]] && echo "01 Ok." || echo "01 Fail."
 
 # Without input checking, it should not care about this mistake.
+# It should also fail, because you don't indicate an action.
 OUTPUT=$(./03-users.sh ljlkj 2>&1 << EOF
 3
 EOF
@@ -46,6 +48,7 @@ EOF
 )
 [[ ($? -eq 0) && (-s "/home/user3/welcome.txt") ]] && echo "04 Ok." || echo "04 Fail."
 
+# Without input checking, it should not care about this mistake.
 # Should fail without sudo
 OUTPUT=$(./03-users.sh remove 2>&1 << EOF
 3
