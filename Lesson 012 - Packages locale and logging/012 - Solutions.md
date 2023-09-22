@@ -66,10 +66,14 @@ Example shell script, which gets saved as ~/check-root.sh. You can of course sav
 
 > #!/bin/bash
 > 
-> if [[ ! -Z $(ps -fC bash,sh,ksh,tmux | grep ^root) ]]
+> if [[ ! -z $(ps -fC bash,sh,ksh,tmux | grep ^root) ]]
+>
 > then
+>
 > echo "Root has an active shell!" | systemd-cat -t check-root
+>
 > fi
+>
 
 * Run: chmod +x ~/check-root.sh
 
