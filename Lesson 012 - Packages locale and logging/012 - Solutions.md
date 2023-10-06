@@ -21,10 +21,13 @@ The prior will give you "ru_RU.koi8r", the latter gives "Europe/Moscow".
 * Run: sudo su - dummy
 * Run: vi ~/.bashrc      # move to the end/bottom of the file
 * Add the following:
-    * TZ=Europe/Moscow; export TZ
-    * LANG=ru_RU.koi8r; export LANG
-    * LC_CALL=ru_RU.koi8r; export LC_CALL
-    * LC_CTYPE=ru_RU.koi8r; export LC_CTYPE
+
+```
+TZ=Europe/Moscow; export TZ
+LANG=ru_RU.koi8r; export LANG
+LC_CALL=ru_RU.koi8r; export LC_CALL
+LC_CTYPE=ru_RU.koi8r; export LC_CTYPE
+```
 
 To test these settings, SSH to the same host with user account "dummy". If you now run commands like "date" and "ls -al" you should see some errors with the character set. The timezone should be okay though. 
 
@@ -64,16 +67,13 @@ Example shell script, which gets saved as ~/check-root.sh. You can of course sav
 
 * Run: vi ~/check-root.sh
 
-> #!/bin/bash
-> 
-> if [[ ! -z $(ps -fC bash,sh,ksh,tmux | grep ^root) ]]
->
-> then
->
-> echo "Root has an active shell!" | systemd-cat -t check-root
->
-> fi
->
+```
+#!/bin/bash
+if [[ ! -z $(ps -fC bash,sh,ksh,tmux | grep ^root) ]]
+then
+echo "Root has an active shell!" | systemd-cat -t check-root
+fi
+```
 
 * Run: chmod +x ~/check-root.sh
 
