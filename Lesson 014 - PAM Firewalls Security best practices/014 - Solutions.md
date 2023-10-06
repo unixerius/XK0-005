@@ -127,11 +127,11 @@ This tells us we need to edit `/etc/security/time.conf`. This is a very complex 
 
 We want to add the following line:
 
-`sshd;;dummy;Wk0600-1700`
+`sshd;*;dummy;Wk0600-1700`
 
 Now, the best way to prove that our configuration works, is to actually add a rule which will BLOCK us right now. Since right now it's 15:51, let me re-write the rule for testing purposes.
 
-`sshd;;dummy;Wk0600-0900`
+`sshd;*;dummy;Wk0600-0900`
 
 The user "dummy" should now not be allowed to log in. Let's try!
 
