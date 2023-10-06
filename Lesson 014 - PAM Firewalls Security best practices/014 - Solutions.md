@@ -104,3 +104,39 @@ chronyc activity
 
 It should show that the Fedora Chronyd is syncing with the Ubuntu VM. 
 
+
+# Case 2: time-restricting SSH
+
+I'll use Fedora for this... 
+
+We want to make sure that user "dummy" is restricted so they can only login in certain time frames. This means we need to use a PAM module and apply it to SSH. 
+
+We saw in the slides that pam_time.so is used in the "account" stack of PAM. 
+
+Let's first make a backup copy of the relevant config file.
+
+`sudo cp /etc/pam.d/sshd /etc/pam.d/sshd.orig`
+
+Then let's edit the file and add the following line, ABOVE the "include" line. So it goes with the other existing "required" lines.
+
+`account   required    pam_time.so`
+
+We can learn more about the configuration with "man pam_time".
+
+This tells us we need to edit `/etc/security/time.conf`. This is a very complex file! Luckily it has a lot of documentation and explanation built in!
+
+We want to add the following line:
+
+`sshd;;dummy;Wk0600-1700`
+
+Now, the best way to prove that our configuration works, is to actually add a rule which will BLOCK us right now. Since right now it's 15:51, let me re-write the rule for testing purposes.
+
+`sshd;;dummy;Wk0600-0900`
+
+The user "dummy" should now not be allowed to log in. Let's try!
+
+Then let's set it back to what we want:
+
+`sshd;*;dummy;Wk0600-1700`
+
+If you can now login as user dummy, you have solved the case!
