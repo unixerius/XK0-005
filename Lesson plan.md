@@ -12,7 +12,7 @@ Tess' lesson plan *does not* follow the order of chapters in the book, neither d
 It is recommended that students read the following chapters **before** each class and before attempting the labs.
 
 | Lesson | Chapters                   |
----------------------------------------
+| ------ | -------------------------- |
 | 1.     | 1, 2                       |
 | 2.     | 3, 10, 12, 16 (ssh)        |
 | 3.     | 10, 15 (permissions), 27   |
