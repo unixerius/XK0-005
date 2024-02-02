@@ -1,0 +1,55 @@
+# This Vagrantfile, when compared to the x86_64 version
+# does not put the three VMs in a shared NAT network. Why?
+# Because currently Qemu is user-mode cannot make use of
+# vmnet-shared. You would need "root" access, which is
+# unwanted.
+#   This Vagrantfile creates three VMs, each with their 
+# own NAT. All of them will have 10.0.2.15 as their IP. 
+
+$script = <<-SCRIPT
+echo "Setting up /etc/hosts will not be useful. VMs are not in the same net."
+SCRIPT
+
+Vagrant.configure("2") do |config|
+
+  config.vm.define :ubuntu do |ubuntu|
+    ubuntu.vm.hostname = "ubuntu"
+    ubuntu.vm.box = "perk/ubuntu-2204-arm64"
+
+    ubuntu.vm.provider "qemu" do |v|
+      v.ssh_port = 2211
+      v.memory = 1024
+      v.smp = "cpus=2,sockets=1,cores=2,threads=1"
+    end
+
+    ubuntu.vm.provision "setup", type: "shell", inline: $script
+  end
+
+  config.vm.define :fedora do |fedora|
+    fedora.vm.hostname = "fedora"
+    fedora.vm.box = "generic/fedora39"
+
+    fedora.vm.provider "qemu" do |v|
+      v.ssh_port = 2212
+      v.memory = 2048
+      v.smp = "cpus=2,sockets=1,cores=2,threads=1"
+    end
+
+    fedora.vm.provision "setup", type: "shell", inline: $script
+  end
+
+  config.vm.define :alma do |alma|
+    alma.vm.hostname = "alma"
+    alma.vm.box = "generic/alma9"
+    #alma.vm.box = "roboxes/alma9"
+
+    alma.vm.provider "qemu" do |v|
+      v.ssh_port = 2213
+      v.memory = 1024
+      v.smp = "cpus=2,sockets=1,cores=2,threads=1"
+    end
+
+    alma.vm.provision "setup", type: "shell", inline: $script
+  end
+
+end
