@@ -1,0 +1,102 @@
+$script = <<-SCRIPT
+echo "192.168.56.11   ubuntu" >> /etc/hosts
+echo "192.168.56.12   fedora" >> /etc/hosts
+echo "192.168.56.13   alma" >> /etc/hosts
+
+if [[ $(hostname) == "fedora" ]]
+then
+cat > /etc/profile.d/fws.sh << EOF
+echo ""
+echo "=========   NOTICE!   ========="
+echo ""
+echo "If you want to run this VM as Fedora Workstation, run:"
+echo ""
+echo "sudo yum group install -y \"Fedora Workstation\""
+echo "sudo systemctl set-default graphical.target"
+echo "sudo systemctl isolate graphical.target"
+echo ""
+EOF
+chmod 644 /etc/profile.d/fws.sh
+elif [[ $(hostname) == "alma" ]]
+then
+cat > /etc/profile.d/fws.sh << EOF
+echo ""
+echo "=========   NOTICE!   ========="
+echo ""
+echo "If you want to run this VM as Alma Workstation, run:"
+echo ""
+echo "sudo yum group install -y \"Workstation\""
+echo "sudo systemctl set-default graphical.target"
+echo "sudo systemctl isolate graphical.target"
+echo ""
+EOF
+chmod 644 /etc/profile.d/fws.sh
+fi
+SCRIPT
+
+Vagrant.configure("2") do |config|
+
+  config.vm.define :ubuntu do |ubuntu|
+    ubuntu.vm.hostname = "ubuntu"
+    ubuntu.vm.box = "bento/ubuntu-22.04"
+
+    # Switch these two, if VirtualBox complains about "permission denied" on networking.
+    #ubuntu.vm.network "private_network", ip: "192.168.56.11", virtualbox__intnet: "08net"
+    ubuntu.vm.network "private_network", ip: "192.168.56.11"
+    ###
+
+    if Vagrant.has_plugin?("vagrant-vbguest")
+      ubuntu.vbguest.auto_update = false
+    end
+
+    ubuntu.vm.provider "virtualbox" do |v|
+      v.memory = 1024
+      v.cpus = 1
+    end
+
+    ubuntu.vm.provision "setup", type: "shell", inline: $script
+  end
+
+  config.vm.define :alma do |alma|
+    alma.vm.hostname = "alma"
+    alma.vm.box = "bento/almalinux-8"
+
+    # Switch these two, if VirtualBox complains about "permission denied" on networking.
+    #alma.vm.network "private_network", ip: "192.168.56.13", virtualbox__intnet: "08net"
+    alma.vm.network "private_network", ip: "192.168.56.13"
+    ###
+
+    if Vagrant.has_plugin?("vagrant-vbguest")
+      alma.vbguest.auto_update = false
+    end
+
+    alma.vm.provider "virtualbox" do |v|
+      v.memory = 2048
+      v.cpus = 2
+    end
+
+    alma.vm.provision "setup", type: "shell", inline: $script
+  end
+
+  config.vm.define :fedora do |fedora|
+    fedora.vm.hostname = "fedora"
+    fedora.vm.box = "bento/fedora-37"
+
+    # Switch these two, if VirtualBox complains about "permission denied" on networking.
+    #fedora.vm.network "private_network", ip: "192.168.56.12", virtualbox__intnet: "08net"
+    fedora.vm.network "private_network", ip: "192.168.56.12"
+    ###
+
+    if Vagrant.has_plugin?("vagrant-vbguest")
+      fedora.vbguest.auto_update = false
+    end
+
+    fedora.vm.provider "virtualbox" do |v|
+      v.memory = 2048
+      v.cpus = 2
+    end
+
+    fedora.vm.provision "setup", type: "shell", inline: $script
+  end
+
+end
