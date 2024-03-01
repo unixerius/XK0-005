@@ -21,4 +21,4 @@ The quizes use Microsoft Forms. These quizes are **anonymous**. We **do not** co
 * [Quiz for lesson 15](https://forms.office.com/Pages/ResponsePage.aspx?id=4KzegEZ3LUmWRur8dH4SDzSKcBla8tJCm5Xudre2PKdURTBFQkZTR1lPUDNTNTNRUFhRUTJKNjhaSy4u)
 * [Quiz for lesson 16](https://forms.office.com/Pages/ResponsePage.aspx?id=4KzegEZ3LUmWRur8dH4SDzSKcBla8tJCm5Xudre2PKdUNzg0MkRXOEVGU0czT1NYVkhZWTRXWFNYWS4u)
 * [Quiz for lesson 17](https://forms.office.com/Pages/ResponsePage.aspx?id=4KzegEZ3LUmWRur8dH4SDzSKcBla8tJCm5Xudre2PKdUQVZLSllSUUVNWlU3TEdFWko2WDFLMFFCWS4u)
-
+* [Bonus quiz about routing, NAT and port forwards](https://forms.office.com/Pages/ResponsePage.aspx?id=4KzegEZ3LUmWRur8dH4SDzSKcBla8tJCm5Xudre2PKdUNkdLOUlLWVQxUVhZUVdFSlgxOUtCNTNIUC4u)
