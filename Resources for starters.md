@@ -17,6 +17,8 @@
 
 [LFD108X - Git for distributed software development - Linux Foundation](https://training.linuxfoundation.org/training/git-for-distributed-software-development-lfd109x/) fully free training
 
+[LPI Linux Essentials](https://www.lpi.org/our-certifications/linux-essentials-overview/)
+
 [Linux Voyage](https://linuxvoyage.github.io) (forked from Linux Journey)
 
 [OverTheWire's Bandit](https://overthewire.org/wargames/bandit/)
