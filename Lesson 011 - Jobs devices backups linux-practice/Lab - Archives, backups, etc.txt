@@ -32,6 +32,9 @@ This will lead you to a stanza which explains that you're looking for the "-@" f
 
 	sudo find /usr/share -name "*.txt" | zip -@ /tmp/share-text.zip
 
+Or with gzip, you'll probably also need to add tar:
+
+	sudo find /usr/share -name "*.txt" | tar zcvf ./share.tgz -T -
 
 
 # Assignment 3
