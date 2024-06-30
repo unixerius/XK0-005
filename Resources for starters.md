@@ -11,6 +11,14 @@
 
 
 ## Early on, for beginners
+[LFS101x - Introduction to Linux - Linux Foundation](https://training.linuxfoundation.org/training/introduction-to-linux/) fully free training
+
+[LFD107X - Linux for developers - Linux Foundation](https://training.linuxfoundation.org/training/open-source-software-development-linux-for-developers-lfd107x/) fully free training
+
+[LFD108X - Git for distributed software development - Linux Foundation](https://training.linuxfoundation.org/training/git-for-distributed-software-development-lfd109x/) fully free training
+
+[LPI Linux Essentials](https://www.lpi.org/our-certifications/linux-essentials-overview/)
+
 [Linux Voyage](https://linuxvoyage.github.io) (forked from Linux Journey)
 
 [OverTheWire's Bandit](https://overthewire.org/wargames/bandit/)
