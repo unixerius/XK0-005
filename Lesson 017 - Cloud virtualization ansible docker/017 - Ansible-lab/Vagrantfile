@@ -8,9 +8,14 @@ echo "192.168.210.13 target3 target3.ansible.lab" >> /etc/hosts
 echo "192.168.210.14 target4 target4.ansible.lab" >> /etc/hosts
 echo "192.168.210.15 target5 target5.ansible.lab" >> /etc/hosts
 
-yum install -y ansible git chrony
-systemctl enable chrony
-systemctl start chrony
+yum install -y python3 python3-pip dos2unix
+
+yum install -y git chrony
+systemctl enable chronyd
+systemctl start chronyd
+
+yum install -y ansible-core
+ansible-galaxy collection install community.general
 
 groupadd ansible
 usermod -a -G ansible vagrant
@@ -19,7 +24,7 @@ cp -r /vagrant/ansible /var/ansible
 cp /vagrant/ansible.cfg /etc/ansible.cfg
 
 cd /var/ansible
-git init
+#git init -q
 
 chown -R vagrant:ansible /var/ansible
 dos2unix /var/ansible/*
@@ -48,7 +53,8 @@ TARGETSCRIPT
 ##########
 # Defining the five Ansible target hosts.
 servers = {
-   "ansible.ansible.lab" => ["generic/centos7", 2, 512, 20, "192.168.210.10" ]
+   #"ansible.ansible.lab" => ["generic/centos8", 2, 512, 20, "192.168.210.10" ]
+   "ansible.ansible.lab" => ["almalinux/9", 2, 512, 20, "192.168.210.10" ]
 }
 
 targets = {
@@ -81,7 +87,7 @@ Vagrant.configure("2") do |config|
       machine.vm.synced_folder ".", "/vagrant", type: "virtualbox"
 
       if Vagrant.has_plugin?("vagrant-vbguest")
-        machine.vbguest.auto_update = true
+        machine.vbguest.auto_update = false
       end
 
       machine.vm.provider "virtualbox" do |v|
