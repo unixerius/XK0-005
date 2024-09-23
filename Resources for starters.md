@@ -29,6 +29,8 @@
 
 [Shawn Powers' free Linux+ YouTube course](https://www.youtube.com/playlist?list=PL78ppT-_wOmuwT9idLvuoKOn6UYurFKCp)
 
+[Jadi's free LPIC1 book and YouTube course](https://linux1st.com)
+
 
 ## Advanced
 [PluralSight's Bash scripting course](https://app.pluralsight.com/library/courses/creating-shell-scripts-enterprise-linux)
