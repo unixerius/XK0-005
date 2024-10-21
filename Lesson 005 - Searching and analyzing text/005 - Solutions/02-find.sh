@@ -13,3 +13,8 @@ find / -name "passwd" -type f 2>/dev/null
 
 find / -perm -o+w -type f 2>/dev/null
 
+# Can you make a zip or gzip with:
+# All the .txt files in the /usr/share  directory tree?
+
+find /usr/share -name "*.txt" | zip -@ ~/share-txt.zip
+
