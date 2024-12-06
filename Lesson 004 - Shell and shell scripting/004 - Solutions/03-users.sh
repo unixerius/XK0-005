@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Based on the exercise, we need to make sure we're running as root.
+
+if [[ ${EUID} -ne 0 || ${USER} != "root" ]]
+then
+  echo "This script should be run by the root user." 
+  exit 1
+fi
+
 # The first positional param will be "create" or "remove".
 # Based on that value, we will make or remove user accounts.
 

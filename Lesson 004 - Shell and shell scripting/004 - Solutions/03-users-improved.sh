@@ -1,13 +1,16 @@
 #!/bin/bash
 
-# The first positional param will be "create" or "remove".
-# Based on that value, we will make or remove user accounts.
+# Based on the exercise, we need to make sure we're running as root.
 
-if [[ ${EUID} -ne 0 ]] 
+if [[ ${EUID} -ne 0 || ${USER} != "root" ]]
 then
-  echo "ERROR: Not running as root. Try with sudo."
+  echo "This script should be run by the root user."
   exit 1
 fi
+
+
+# The first positional param will be "create" or "remove".
+# Based on that value, we will make or remove user accounts.
 
 case ${1} in
 create) ACTION="${1}";;
