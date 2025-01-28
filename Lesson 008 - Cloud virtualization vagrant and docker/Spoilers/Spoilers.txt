@@ -1,0 +1,70 @@
+Lesson 008 - Homework
+
+== Assignment 2 - SSH port forwards
+
+Use the three VMs we made using Vagrant to practice something special with SSH. 
+
+Using SSH to hop from vagrant1, to vagrant2, to vagrant3 is the easy part. 
+
+Now you need to learn how you can use an SSH tunnel from vagrant1 to vagrant2, to make vagrant3 reachable on localhost:2222 of vagrant1!
+
+Show the me the one single command which you would run on vagrant1 to:
+1. SSH into vagrant2 with user "vagrant",
+2. Setup an SSH port forward from vagrant1:2222, through vagrant2, to vagrant3:22.
+
+Then show me the command you would use to login to alpine3, from alpine1, via this port forward.
+
+The Cyber Plumber's Handbook (see class 002) can help you with this! Key words are SSH tunneling and/or port forwarding.
+
+
+== Assignment 2 solution
+
+SSH can be used to make port forwards. This allows you to open a listening port on the source host (the SSH client), which will receive traffic and forward it to another host+port.
+
+We want to setup a port forward from the SSH client (for example port 2222), to port 22 on host alpine3.
+
+The SSH manual page will point you to the -L option. 
+
+The right syntax for it is LPORT:RHOST:RPORT, L=local, R=remote. 
+
+Here, it will be: -L 2222:192.168.56.13:22
+
+The command to setup the SSH tunnel from alpine1 is:
+
+ssh -L 2222:192.168.56.13:22 vagrant@192.168.56.12
+
+To then use this tunnel, to login to alpine3, via the tunnel between alpine1 and 2, is this:
+
+ssh -p 2222 vagrant@localhost
+
+
+== Assignment 4 - RSync via SSH
+
+Setup an RSync via SSH, from host vagrant1, to both vagrant2 and vagrant3. 
+
+I want you to synchronize "/var/www/" and its contents from vagrant1 to the other two hosts. 
+
+Prove that it works by making a change to "index.html" on vagrant1 and then propagating the change to the other two hosts via RSync.
+
+In the box below describe to me which changes you made, which commands you ran.
+
+
+== Assignment 4 solution
+
+We played wit rsync before, to synchronize two directories. Let's try again. I will make alpine1 the lead host. 
+
+In our earlier lab setup, we made the index.html files and the all have their own hostname in there: "hello from alpine1" (or 2, or 3). 
+
+Let's change this by editing the index.html file on alpine1. I'll make it say: "Welcome to the lab! Alpine1 is in the lead!".
+
+To make rsync work, we need to ensure that our SSH user "vagrant" has write access to all the htdocs directories. So on ALL three Alpine hosts, I run:
+
+sudo chown -R vagrant:vagrant /var/www/localhost/htdocs
+
+Now I should be able to run the following on alpine1:
+
+rsync -a /var/www/localhost/htdocs/ vagrant@192.168.56.13:/var/www/localhost/htdocs/
+
+Would it be tidier to use another account than Vagrant? Yes of course, but for this quick lab this will do perfectly well. :)
+
+
