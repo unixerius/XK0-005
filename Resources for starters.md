@@ -12,6 +12,7 @@
 
 ## Early on, for beginners
 [LFS101x - Introduction to Linux - Linux Foundation](https://training.linuxfoundation.org/training/introduction-to-linux/) fully free training
+
 [TCMSec's Linux 100](https://academy.tcm-sec.com/p/linux-fundamentals)
 
 [LFD107X - Linux for developers - Linux Foundation](https://training.linuxfoundation.org/training/open-source-software-development-linux-for-developers-lfd107x/) fully free training
