@@ -19,15 +19,20 @@ ansible-galaxy collection install community.general
 
 groupadd ansible
 usermod -a -G ansible vagrant
+
 cp -r /vagrant/ansible /var/ansible
-
 cp /vagrant/ansible.cfg /etc/ansible.cfg
-
-cd /var/ansible
-#git init -q
-
 chown -R vagrant:ansible /var/ansible
 dos2unix /var/ansible/*
+
+cat > /etc/motd <<-EOF
+		== !! NOTE !! ==
+You will need to edit /etc/hosts. Currently it's not correct.
+
+Visit every VM in this lab with SSH and collect their IP addresses.
+Then update /etc/hosts on this server, so the names and IPs are correct.
+
+EOF
 
 SERVERSCRIPT
 
@@ -35,17 +40,12 @@ SERVERSCRIPT
 ##########
 # The post-install script for the Ansible target hosts.
 $targetscript = <<-TARGETSCRIPT
-echo "192.168.210.10 ansible ansible.ansible.lab" >> /etc/hosts
-echo "192.168.210.11 target1 target1.ansible.lab" >> /etc/hosts
-echo "192.168.210.12 target2 target2.ansible.lab" >> /etc/hosts
-echo "192.168.210.13 target3 target3.ansible.lab" >> /etc/hosts
-echo "192.168.210.14 target4 target4.ansible.lab" >> /etc/hosts
-echo "192.168.210.15 target5 target5.ansible.lab" >> /etc/hosts
+yum install -y git chrony
+systemctl enable chronyd
+systemctl start chronyd
 
-apk add python3 git uuidgen chrony
-
-addgroup ansible           # Alpine does not have groupadd
-addgroup vagrant ansible   # Alpine does not have usermod
+groupadd ansible
+usermod -a -G ansible vagrant
 
 TARGETSCRIPT
 
@@ -53,16 +53,15 @@ TARGETSCRIPT
 ##########
 # Defining the five Ansible target hosts.
 servers = {
-   #"ansible.ansible.lab" => ["generic/centos8", 2, 512, 20, "192.168.210.10" ]
    "ansible.ansible.lab" => ["almalinux/9", 2, 512, 20, "192.168.210.10" ]
 }
 
 targets = {
-   "target1.ansible.lab" => ["generic/alpine317", 2, 512, 10, "192.168.210.11", 8081 ],
-   "target2.ansible.lab" => ["generic/alpine317", 2, 512, 10, "192.168.210.12", 8082 ],
-   "target3.ansible.lab" => ["generic/alpine317", 2, 512, 10, "192.168.210.13", 8083 ],
-   "target4.ansible.lab" => ["generic/alpine317", 2, 512, 10, "192.168.210.14", 8084 ],
-   "target5.ansible.lab" => ["generic/alpine317", 2, 512, 10, "192.168.210.15", 8085 ]
+   "target1.ansible.lab" => ["almalinux/9", 2, 512, 10, "192.168.210.11", 8081 ],
+   "target2.ansible.lab" => ["almalinux/9", 2, 512, 10, "192.168.210.12", 8082 ],
+   "target3.ansible.lab" => ["almalinux/9", 2, 512, 10, "192.168.210.13", 8083 ],
+   "target4.ansible.lab" => ["almalinux/9", 2, 512, 10, "192.168.210.14", 8084 ],
+   "target5.ansible.lab" => ["almalinux/9", 2, 512, 10, "192.168.210.15", 8085 ]
 }
 
 
@@ -82,13 +81,7 @@ Vagrant.configure("2") do |config|
       machine.vm.box      = box
       machine.vm.hostname = name
 
-      machine.vm.network "private_network", ip: ip, virtualbox__intnet: "ansiblenet"  
-      #machine.vm.synced_folder ".", "/vagrant", type: "smb", mount_options: ["vers=3.02","mfsymlinks"]
-      machine.vm.synced_folder ".", "/vagrant", type: "virtualbox"
-
-      if Vagrant.has_plugin?("vagrant-vbguest")
-        machine.vbguest.auto_update = false
-      end
+      machine.vm.synced_folder ".", "/vagrant"
 
       machine.vm.provider "virtualbox" do |v|
         v.memory = memory
@@ -112,13 +105,7 @@ Vagrant.configure("2") do |config|
       machine.vm.box      = box
       machine.vm.hostname = name
 
-      machine.vm.network "private_network", ip: ip, virtualbox__intnet: "ansiblenet" 
       machine.vm.network "forwarded_port", guest: 80, host: pfwd 
-      machine.vm.synced_folder ".", "/vagrant", type: "virtualbox"
-
-      if Vagrant.has_plugin?("vagrant-vbguest")
-        machine.vbguest.auto_update = false
-      end
 
       machine.vm.provider "virtualbox" do |v|
         v.memory = memory

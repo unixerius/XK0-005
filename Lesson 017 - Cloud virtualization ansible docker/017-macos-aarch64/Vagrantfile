@@ -1,0 +1,125 @@
+##########
+# The post-install script to setup the central Ansible server.
+$serverscript = <<-SERVERSCRIPT
+cat > /etc/motd << EOF
+
+               == !!  Note  !! ==
+
+You will need to write your own /etc/hosts file.
+Get the IP addresses from the Ansible host and the five targets.
+For example, write /etc/hosts like so:
+
+192.168.210.10 ansible ansible.ansible.lab
+192.168.210.11 target1 target1.ansible.lab
+192.168.210.12 target2 target2.ansible.lab
+
+
+EOF
+
+apt install -y ansible git chrony zip unzip dos2unix
+systemctl enable chrony
+systemctl start chrony
+
+groupadd ansible
+usermod -a -G ansible vagrant
+
+cd /vagrant
+if [[ $? -eq 0 ]]
+then
+  cp -r ./ansible /var/ansible
+  cp ./ansible.cfg /etc/ansible.cfg
+  chown -R vagrant:ansible /var/ansible
+  dos2unix /var/ansible/*
+else
+  echo "WARNING: Downloading the Ansible files failed."
+fi
+
+SERVERSCRIPT
+
+
+##########
+# The post-install script for the Ansible target hosts.
+$targetscript = <<-TARGETSCRIPT
+apt install -y python3 git chrony 
+systemctl enable chrony
+systemctl start chrony
+
+groupadd ansible
+usermod -a -G ansible vagrant
+
+TARGETSCRIPT
+
+
+##########
+# Defining the five Ansible target hosts.
+servers = {
+   "ansible.ansible.lab" => ["bento/debian-11", 2, 512, "192.168.210.10" ]
+}
+
+targets = {
+   "target1.ansible.lab" => ["bento/debian-11", 2, 512, "192.168.210.11", 8081 ],
+   "target2.ansible.lab" => ["bento/debian-11", 2, 512, "192.168.210.12", 8082 ],
+   "target3.ansible.lab" => ["bento/debian-11", 2, 512, "192.168.210.13", 8083 ],
+   "target4.ansible.lab" => ["bento/debian-11", 2, 512, "192.168.210.14", 8084 ],
+   "target5.ansible.lab" => ["bento/debian-11", 2, 512, "192.168.210.15", 8085 ]
+}
+
+
+##########
+# Starting the actual build.
+
+Vagrant.configure("2") do |config|
+
+  ##########
+  # First, define the server that acts as central Ansible host.
+  # It will send assignments to all Ansible targets.
+
+  servers.each do | (name, cfg) |
+    box, numvcpus, memory, ip = cfg
+    config.vm.define name do |machine|
+
+      machine.vm.box        = box
+      machine.vm.hostname   = name
+
+      #machine.vm.network "private_network", ip: ip, auto_config: true
+      machine.vm.synced_folder ".", "/vagrant", disabled: false
+
+      machine.vm.provider "vmware_desktop" do |v|
+        v.gui      = false           # Set to true to see the VMWare window
+        v.memory   = memory
+        v.cpus     = numvcpus
+      end
+
+      machine.vm.provision "setup", type: "shell", inline: $serverscript
+
+    end # end machine config
+  end # end servers.each
+
+
+  ##########
+  # Then we define the five Ansible target hosts.
+  # These are smaller, light Alpine Linux system for demo purposes.
+
+  targets.each do | (name, cfg) |
+    box, numvcpus, memory, ip, pfwd = cfg
+    config.vm.define name do |machine|
+
+      machine.vm.box        = box
+      machine.vm.hostname   = name
+
+      #machine.vm.network "private_network", ip: ip
+      machine.vm.network "forwarded_port", guest: 80, host: pfwd 
+      machine.vm.synced_folder ".", "/vagrant", disabled: true
+
+      machine.vm.provider "vmware_desktop" do |v|
+        v.gui      = false           # Set to true to see the VMWare window
+        v.memory   = memory
+        v.cpus     = numvcpus
+      end
+
+      machine.vm.provision "setup", type: "shell", inline: $targetscript
+
+    end # end machine config
+  end # end targets.each
+
+end

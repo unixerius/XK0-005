@@ -10,25 +10,25 @@
   tasks:
   - name: Install packages
     package:
-      name: "lighttpd"
+      name: "httpd"
       state: present
   
   - name: Enable and run the service
     service:
-      name: "lighttpd"
+      name: "httpd"
       state: started
       enabled: yes
 
   - name: Git clone a website
     git:
       repo: https://github.com/cloudacademy/static-website-example
-      dest: "/var/www/localhost/htdocs"
+      dest: "/var/www/html"
       update: yes
 
   - name: Set permissions on website correctly
     file: 
-      dest: "/var/www/localhost"
+      dest: "/var/www/html"
       owner: root
-      group: www-data
+      group: apache
       mode: "u=rwX,g=rX,o=rX"
       recurse: yes

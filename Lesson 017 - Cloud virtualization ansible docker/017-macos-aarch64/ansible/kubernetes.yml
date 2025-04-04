@@ -1,0 +1,35 @@
+---
+
+- name: Kubernetes cluster setup
+  remote_user: vagrant
+  become: yes
+
+  hosts:
+  - alpine
+
+  tasks:
+  - name: Install packages
+    package:
+      name: "{{ item }}"
+      state: present
+    with_items:
+      - cni-plugin-flannel
+      - cni-plugins
+      - flannel
+      - flannel-contrib-cni
+      - kubelet
+      - kubeadm
+      - kubectl
+      - docker
+      - nfs-utils
+      - chrony
+  
+  - name: Enable and run the service
+    service:
+      name: "{{ item }}"
+      state: started
+      enabled: yes
+    with_items:
+      - docker
+      - kubelet
+      - chronyd

@@ -1,0 +1,6 @@
+ansible.ansible.lab
+target1.ansible.lab
+target2.ansible.lab
+target3.ansible.lab
+target4.ansible.lab
+target5.ansible.lab

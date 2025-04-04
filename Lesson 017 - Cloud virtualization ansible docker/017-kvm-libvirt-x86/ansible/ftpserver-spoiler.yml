@@ -1,0 +1,32 @@
+---
+
+- name: ftp server setup
+  remote_user: vagrant
+  become: yes
+
+  hosts:
+  - ftp
+
+  tasks:
+  - name: Install packages
+    package:
+      name: "vsftpd"
+      state: present
+
+  - name: Set VSFTPD sandbox config
+    ansible.builtin.lineinfile:
+      path: /etc/vsftpd/vsftpd.conf
+      regexp: '^seccomp_sandbox='
+      line: "seccomp_sandbox=NO"
+
+  - name: Set VSFTPD isolate config
+    ansible.builtin.lineinfile:
+      path: /etc/vsftpd/vsftpd.conf
+      regexp: '^isolate_network='
+      line: "isolate_network=NO"
+
+  - name: Enable and run the service
+    service:
+      name: "vsftpd"
+      state: reloaded
+      enabled: yes

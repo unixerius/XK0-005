@@ -1,0 +1,32 @@
+---
+
+- name: Basic setup of our servers
+  remote_user: vagrant
+  become: yes
+
+  hosts:
+  - all
+
+  tasks:
+  - name: Create group
+    group:
+      name: brotherhood
+      state: present
+
+  - name: Setup extra user
+    user:
+      name: "{{ item }}"
+      create_home: yes
+      append: yes
+      groups: brotherhood
+    with_items:
+      - seth
+      - kane
+
+  - name: Install packages
+    package:
+      name: "{{ item }}"
+      state: present
+    with_items:
+      - curl
+      - git
