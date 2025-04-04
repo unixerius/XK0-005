@@ -1,0 +1,56 @@
+$script = <<-SCRIPT
+apt install -y lighttpd
+echo "Hello! You're talking to:"  > /var/www/html/index.html
+hostname >> /var/www/html/index.html
+chmod 644 /var/www/html/index.html
+systemctl enable lighttpd
+systemctl start lighttpd
+SCRIPT
+
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "bento/debian-11"
+
+  config.vm.define :alpine1 do |alp1|
+    alp1.vm.hostname = "alpine1"
+
+    alp1.vm.network "private_network", ip: "192.168.56.11"
+    alp1.vm.network "forwarded_port", guest: 80, host: 8081
+
+    alp1.vm.provider "vmware_desktop" do |v|
+      v.gui    = false
+      v.memory = 512
+      v.cpus   = 1
+    end
+    alp1.vm.provision "setup", type: "shell", inline: $script
+  end
+
+  config.vm.define :alpine2 do |alp2|
+    alp2.vm.hostname = "alpine2"
+
+    alp2.vm.network "private_network", ip: "192.168.56.12"
+    alp2.vm.network "forwarded_port", guest: 80, host: 8082
+
+    alp2.vm.provider "vmware_desktop" do |v|
+      v.gui    = false
+      v.memory = 512
+      v.cpus   = 1
+    end
+    alp2.vm.provision "setup", type: "shell", inline: $script
+  end
+
+  config.vm.define :alpine3 do |alp3|
+    alp3.vm.hostname = "alpine3"
+
+    alp3.vm.network "private_network", ip: "192.168.56.13"
+    alp3.vm.network "forwarded_port", guest: 80, host: 8083
+
+    alp3.vm.provider "vmware_desktop" do |v|
+      v.gui    = false
+      v.memory = 512
+      v.cpus   = 1
+    end
+    alp3.vm.provision "setup", type: "shell", inline: $script
+  end
+
+end

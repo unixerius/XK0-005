@@ -1,0 +1,36 @@
+$script = <<-SCRIPT
+apt install -y lighttpd git
+mkdir -p /var/www/html 2>/dev/null
+cd /var/www/
+rm -rf static-website-example 2>/dev/null
+
+git clone https://github.com/cloudacademy/static-website-example
+cp -r static-website-example/* html/
+
+find /var/www/ -type d | xargs chmod 755
+find /var/www/ -type f | xargs chmod 644
+
+systemctl enable lighttpd
+systemctl start lighttpd
+SCRIPT
+
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "bento/debian-11"
+
+  config.vm.define :static1 do |stat1|
+    stat1.vm.hostname = "static1"
+
+    stat1.vm.network "private_network", ip: "192.168.56.33"
+    stat1.vm.network "forwarded_port", guest: 80, host: 9080
+
+    stat1.vm.provider "vmware_desktop" do |v|
+      v.gui    = false
+      v.memory = 512
+      v.cpus   = 1
+    end
+
+    stat1.vm.provision "setup", type: "shell", inline: $script
+  end
+
+end
