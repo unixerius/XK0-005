@@ -1,0 +1,109 @@
+# Assignment 1
+
+Use "vi" or "nano" to create ~/at-test.sh.
+
+Contents:
+
+	#!/bin/bash
+	echo "Hello!" >> /tmp/at-test.txt
+	date >> /tmp/at-test.txt
+
+Make the script executable:
+
+	chmod +x ~/at-test.sh
+
+You may need to install at:
+
+	sudo yum install -y at
+	
+or
+	
+	sudo apt install -y at
+
+Then schedule it to run in one minute. According to the man-page for at, you can read how to specify times in /usr/share/doc/at/timespec.
+
+	sudo at now + 1 minute -f /home/tess/at-test.txt
+
+Verify that the file was changed.
+
+	ls -lrt /tmp
+	cat /tmp/at-test.txt
+
+Then schedule it to run every minute.
+
+	crontab -e
+
+This opens your editor (might ask you to choose an editor). Add:
+
+	* * * * * /home/tess/at-test.txt
+
+You can check whether the file is changed every minute:
+
+	tail -f /home/tess/at-test.txt
+
+
+
+# Assignment 2
+
+Use an editor (like vi or nano) to create /opt/mysvc.sh. Because this is in /opt, you will need to use sudo.
+
+	sudo vi /opt/mysvc.sh
+
+Contents:
+
+	#!/bin/bash
+	echo "This was logged at: $(date)." >> /var/log/mysvc.log
+
+Make it executable:
+
+	sudo chmod +x /opt/mysvc.sh
+
+Run the script, to verify that it works and that the log file is made.
+
+	sudo /opt/mysvc.sh
+	ls -lrt /var/log
+	sudo cat /var/log/mysvc.log
+
+Let's make a systemd service unit, using the instructions from https://www.suse.com/support/kb/doc/?id=000019672
+
+	sudo vi /etc/systemd/system/mysvc.service
+
+Contents:
+
+	[Unit]
+	Description=An example service from Tess.
+
+	[Service]
+	ExecStart=/bin/bash /opt/mysvc.sh
+
+	[Install]
+	WantedBy=multi-user.target
+
+Let systemd find the new service:
+
+	systemctl daemon-reload
+
+Test that the service works
+
+	sudo systemctl start mysvc
+	ls -lrt /var/log
+	cat /var/log/mysvc.log
+
+Enable the service at boot time.
+
+	sudo systemctl enable mysvc
+
+Testing!
+
+	sudo reboot
+
+After the boot, let's check!
+
+	ls -lrt /var/log
+	sudo cat /var/log/mysvc.log
+
+I hope it worked! It should have added a new message (with the right time stamp) after the boot. 
+
+
+
+
