@@ -1,0 +1,71 @@
+# Assignment 1
+
+Note the different outcomes of the three example commands on the slide.
+
+	tar zcf /tmp/home1.tgz /home/tess/
+	cd /home; tar zcf /tmp/home2.tgz tess/
+	cd ~; tar zcf /tmp/home3.tgz ./*.*
+
+The first will make a zipped tar-ball, with all files being under "home/tess/". Tar will even warn you that it's stripping the leading "/". This ensures that you don't accidentally overwrite something you wouldn't want to, when extracting. There's a big difference between overwriting ./home/tess and /home/tess, depending on where you extract the file. 
+
+The second will make a zipped tar-ball, with all files being under "tess/". It includes all files and (sub)dirs in /home/tess, just like the first file.
+
+The third command will make a zipped tar-ball which actually ONLY contains files whose name includes one-or-more characters, followed by a dot, followed by one-or-more characters. This is much less than what you'd expect.
+
+To copy these files to the other VM, for example from Fedora to Ubuntu, run: 
+
+	scp /tmp/home*tgz tess@ubuntu:/tmp
+
+There you can unpack them into /tmp and you'll see the differences.
+
+
+
+# Assignment 2
+
+This requires you to use the man-page of the "zip" command, after also checking if you remember how to use "find". 
+
+In short, run "man zip" and then use the forward slash, to search for stdin.
+
+	/stdin
+
+This will lead you to a stanza which explains that you're looking for the "-@" flag.
+
+	sudo find /usr/share -name "*.txt" | zip -@ /tmp/share-text.zip
+
+Or with gzip, you'll probably also need to add tar:
+
+	sudo find /usr/share -name "*.txt" | tar zcvf ./share.tgz -T -
+
+
+# Assignment 3
+
+First make sure you have something to sync and to have directories.
+
+On the source host run:
+
+	sudo mkdir /var/www
+	sudo touch /var/www/1 /var/www/2 /var/www/3
+	sudo chown -R $(whoami) /var/www
+
+On the target host run:
+
+	sudo mkdir /var/www
+	sudo chown $(whoami) /var/www
+
+We're doing the "chown", so you can use your own account to rsync the files. In reality we would use a non-personal service account for this, which has write access to /var/www.
+
+The command you are looking for, obviously, is "rsync". My slides also suggest that you use the -a flag. But how to specify the source and destination?
+
+SOURCE:
+* /var/www, means "sync www, from /var."
+* /var/www/, means "sync the contents of /var/www/."
+
+TARGET:
+* /var, means "into /var".
+* /var/www, means "into /var/www". 
+
+So either of these two is correct. Test out why.
+
+	rsync -a /var/www/ tess@ubuntu:/var/www
+	rsync -a /var/www tess@ubuntu:/var
+

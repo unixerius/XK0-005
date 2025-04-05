@@ -57,11 +57,11 @@ servers = {
 }
 
 targets = {
-   "target1.ansible.lab" => ["almalinux/9", 2, 512, 10, "192.168.210.11", 8081 ],
-   "target2.ansible.lab" => ["almalinux/9", 2, 512, 10, "192.168.210.12", 8082 ],
-   "target3.ansible.lab" => ["almalinux/9", 2, 512, 10, "192.168.210.13", 8083 ],
-   "target4.ansible.lab" => ["almalinux/9", 2, 512, 10, "192.168.210.14", 8084 ],
-   "target5.ansible.lab" => ["almalinux/9", 2, 512, 10, "192.168.210.15", 8085 ]
+   "target1.ansible.lab" => ["almalinux/9", 1, 512, 10, "192.168.210.11", 8081 ],
+   "target2.ansible.lab" => ["almalinux/9", 1, 512, 10, "192.168.210.12", 8082 ],
+   "target3.ansible.lab" => ["almalinux/9", 1, 512, 10, "192.168.210.13", 8083 ],
+   "target4.ansible.lab" => ["almalinux/9", 1, 512, 10, "192.168.210.14", 8084 ],
+   "target5.ansible.lab" => ["almalinux/9", 1, 512, 10, "192.168.210.15", 8085 ]
 }
 
 
