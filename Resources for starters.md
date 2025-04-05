@@ -25,11 +25,15 @@
 
 [OverTheWire's Bandit](https://overthewire.org/wargames/bandit/)
 
+## Studying for Linux+
+
 [KodeKloud's Linux & DevOps learning path ](https://kodekloud.com/learning-path-devops-basics/)(free after sign-up)
 
 [KodeKloud Engineer](https://legacy.kodekloud.com/p/kodekloud-engineer)
 
 [Shawn Powers' free Linux+ YouTube course](https://www.youtube.com/playlist?list=PL78ppT-_wOmuwT9idLvuoKOn6UYurFKCp)
+
+[Hank Hackerson's free Linux YouTube course](https://www.youtube.com/playlist?list=PLKJGe-yb9iQZS6Gr5J_hGgob87k7Ez24M)
 
 [Jadi's free LPIC1 book and YouTube course](https://linux1st.com)
 
