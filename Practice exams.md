@@ -12,7 +12,6 @@ As part of the Linux+ class Tess teaches, she gives in-between practice exams. T
 These three collections of Wordwall tests are awesome! They were made by other people who prepared for Linux+.
 
 * [CompTIA's own free questions XK0-005](https://www.comptia.org/training/resources/practice-tests/linux-xk0-005-practice-questions)
-* [CompTIA's own free questions XK0-004](https://www.comptia.org/training/resources/practice-tests/linux-xk0-004-practice-questions)
 * [Commands and acronyms, by Bikih](https://wordwall.net/teacher/18426117/bikih47888)
 * [More commands, by Bikih](https://wordwall.net/teacher/18429513/kidak86239)
 * [File systems, by Lehodot](https://wordwall.net/resource/64616768/filesystem-hierarchy-standard-fhs-linux)
