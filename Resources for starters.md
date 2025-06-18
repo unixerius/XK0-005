@@ -29,7 +29,7 @@
 
 [KodeKloud's Linux & DevOps learning path ](https://kodekloud.com/learning-path-devops-basics/)(free after sign-up)
 
-[KodeKloud Engineer](https://legacy.kodekloud.com/p/kodekloud-engineer)
+[KodeKloud Engineer](https://engineer.kodekloud.com)
 
 [Shawn Powers' free Linux+ YouTube course](https://www.youtube.com/playlist?list=PL78ppT-_wOmuwT9idLvuoKOn6UYurFKCp)
 
@@ -43,14 +43,12 @@
 
 [Exercism](https://exercism.org/), has 80+ exercises for Bash scripting.
 
-[Exercises from the university of Cambridge](http://www-h.eng.cam.ac.uk/help/tpl/unix/scripts/node16.html)
-
 [Exercises from TLDP](https://tldp.org/LDP/abs/html/writingscripts.html)
 
 [Cert Depot's RHCSA 7 exercises](https://www.certdepot.net/)
 
 [Linux Upskill Challenge](https://linuxupskillchallenge.com/)
 
-Sander van Vugt's [Linux+ training materials at O'Reilly.](https://www.oreilly.com/library/view/comptia-linux-xk0-004/9780135896860/)
+Sander van Vugt's [Linux+ training materials at O'Reilly.](https://www.oreilly.com/search/?q=author%3A%22Sander%20van%20Vugt%22&rows=100)
 
-Sander van Vugt's [practice exercises for the RHCSA 8 exam.](https://www.sandervanvugt.com/practice-key-rhcsa-tasks-to-prepare-for-the-rhcsa-exam/)
+Sander van Vugt's [practice exercises for the RHCSA 8 exam.](https://www.sandervanvugt.com/course/rhcsa-challenges/)
