@@ -8,6 +8,13 @@ The classes in this Linux+ track include a large number of labs and exercises. W
 
 The lab instructions are updated for the latest version of the Linux+ exam.
 
+# Authorized training materials
+By [CompTIA's definition thereof](https://www.comptia.org/en-us/resources/test-policies/unauthorized-training-materials/), this repository contains authorized training materials. 
+
+All the labs, and documentation inside this Git repository was created by myself. No AI/LLM and absolutely no copyright infringement or use of exam dumps. 
+
+This guarantee _does not_ extend to resources linked to, outside of this Git repository. Of course I take utmost care to only link to high quality, authorized materials, but I cannot guarantee what other vendors get up to. 
+
 # Working environment
 
 For this class, we assume everybody uses VirtualBox because it's the lowest common denominator. VirtualBox is available for MacOS, Windows and Linux. The only exception, for now, is MacOS systems on ARM (aarch64). On those, we use UTM.
