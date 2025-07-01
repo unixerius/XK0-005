@@ -27,6 +27,8 @@
 
 ## Studying for Linux+
 
+[Sad Servers, where you troubleshoot and fix VMs (free)](https://sadservers.com)
+
 [KodeKloud's Linux & DevOps learning path ](https://kodekloud.com/learning-path-devops-basics/)(free after sign-up)
 
 [KodeKloud Engineer](https://engineer.kodekloud.com)
