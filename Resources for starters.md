@@ -1,16 +1,19 @@
 # More resources to learn Linux
 
 ## Special mention
+
 [Cisco's free Networking Academy, which includes Linux courses.](https://www.netacad.com/courses/os-it)
 
 [Linux Foundation's free, 60 hour Linux introductory course.](https://training.linuxfoundation.org/training/introduction-to-linux/)
 
-
 ## Complete newb level:
+
 [Tech Gee's free ITF+ courses](https://technologygee.com/category/it-fundamentals/itf-fc0-u61/)
 
-
 ## Early on, for beginners
+
+[Learn Linux with Hands-On Labs](https://labex.io/skilltrees/linux) (free after sign-up)
+
 [LFS101x - Introduction to Linux - Linux Foundation](https://training.linuxfoundation.org/training/introduction-to-linux/) fully free training
 
 [TCMSec's Linux 100](https://academy.tcm-sec.com/p/linux-fundamentals)
@@ -39,8 +42,10 @@
 
 [Jadi's free LPIC1 book and YouTube course](https://linux1st.com)
 
+[CompTIA Linux+ Certification Training Labs (Hands-On)](https://labex.io/courses/comptia-linux-plus-training-labs) (freemium)
 
 ## Advanced
+
 [PluralSight's Bash scripting course](https://app.pluralsight.com/library/courses/creating-shell-scripts-enterprise-linux)
 
 [Exercism](https://exercism.org/), has 80+ exercises for Bash scripting.
