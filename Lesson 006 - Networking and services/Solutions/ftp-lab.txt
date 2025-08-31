@@ -1,0 +1,35 @@
+The reason why I'm not asking you to do this lab on Fedora, is because you would also need to configure the firewall. We haven't learned about that yet, so let's work on Ubuntu.
+
+In order to install VSftpd on Ubuntu, you'll first need to find the package name.
+
+sudo apt search vsftpd
+
+Luckily this shows the package name is, rather predictably, "vsftpd". Install it as follows:
+
+sudo apt install -y vsftpd
+
+In the lab instructions I ask you to look for recent changes under the Systemd configuration tree. I'm suggestion you use "-lrt" with ls, because this shows "long listing, reverse time sorted".
+
+The listing of /lib/systemd/system doesn't seem to show new and recent changes. Weird? Maybe not! Because the new vsftpd file that was installed in that directory has a change date from rather long ago. That file was installed with the vsftpd package, while retaining its original creation time and data.
+
+The listing of /etc/systemd/system DOES show a recent change: "multi-user.target.wants". This directory, as you may remember from the slides in class, contains symbolic links to startup scripts which are needed during system boot, to the "mutli-user" Systemd target. 
+
+So what is that most recent change to the directory? A new symbolic link, for the VSftpd service. It links to the file that was installed under /lib/systemd/system. 
+
+Now this is interesting! My next slide asks you to run "systemctl enable vsftpd" and check for changes. There won't be any. That's because the VSftpd creators have decided that, when installing this service, they'll enable it by default! 
+
+That's maybe not to everybody's liking, but that's why we're checking it. 
+
+Now use "sudo systemctl status" to check on the service. It shows that, not only is it enabled, it's even running! User-friendly? Yes. Expected? Maybe not. 
+
+When I ask you to prove that the FTP service works, that means that you either run "ftp yourname@ubuntu" from the Fedora host, or you run "ftp yourname@localhost" on Ubuntu. 
+
+If you get a password prompt, you've proven the service works! At least it accepts network connections. You can also login and mess around a little to show FTP really works. You can use the "help" command for more information. 
+
+As last task I ask you to disable and mask VSftpd. This was covered in the slides, but you can also read "man systemctl" or do "systemctl --help" and see if you find information on these options. 
+
+In the end you'll run:
+
+sudo systemctl stop vsftpd
+sudo systemctl disable vsftpd
+sudo systemctl mask vsftpd

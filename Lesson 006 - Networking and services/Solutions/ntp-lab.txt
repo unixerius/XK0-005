@@ -1,0 +1,33 @@
+For this lab, we're not installing a service but a client. In this lab, Chrony will be installed to synchronize the clock of your Fedora virtual machine with a central clock that's on the Internet. 
+
+Before we start, let's check that NTP isn't active on the system. You can run:
+
+sudo timedatectl
+
+If that says "NTP service: inactive", Fedora does not have an NTP client yet. 
+
+First, let's search for the right package name:
+
+sudo yum search chrony
+
+Not completely unexpected, the name of the package is "chrony".
+
+Are there other NTP services and clients? Absolutely! You can do a "sudo yum search ntp" and see others. But we'll continue with Chrony.
+
+sudo yum install -y chrony
+
+In the lab instructions I ask you to find the configuration file for this software. You could hazard a wild guess and do "man chrony", but that doesn't give you results. If you want to find the relevant pages, do "man -k chrony" as this will find man-pages for binaries, libraries and files related to that keyword.
+
+This shows us there's "chronyc" (a command), "chronyd)" (the daemon) and "chrony.conf" the configuration file. You could use "find" to search for that file: 
+
+sudo find / -name "chrony.conf"
+
+... or guess that it's under /etc. It turns out the file is "/etc/chrony.conf".
+
+The configuration file is complicated, but the most important line right now starts with "pool". This line shows you which central clock servers are used by Chrony. In this case, the Fedora-owned NTP servers. 
+
+If you check "timedatectl" again, you'll see that NTP is already active even without us doing anything. 
+
+sudo systemctl status chronyd 
+
+... shows that the service was enabled and started straight "out of the box".
