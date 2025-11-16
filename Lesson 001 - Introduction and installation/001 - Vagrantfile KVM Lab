@@ -1,0 +1,108 @@
+$script = <<-SCRIPT
+echo "192.168.56.11   ubuntu" >> /etc/hosts
+echo "192.168.56.12   fedora" >> /etc/hosts
+echo "192.168.56.13   alma" >> /etc/hosts
+
+if [[ $(hostname) == "fedora" || $(hostname) == "alma" ]]
+then
+  systemctl enable sshd
+  systemctl start sshd
+else
+  systemctl enable ssh
+  systemctl start ssh
+fi
+
+useradd -s /bin/bash -m dummy
+useradd -s /bin/bash -m dummy2
+useradd -s /bin/bash -m opsuser
+
+echo "dummy:dummy" | chpasswd
+echo "dummy2:dummy2" | chpasswd
+echo "opsuser:opsuser" | chpasswd
+
+groupadd staff
+groupadd dummies
+groupadd ssh-users
+
+sudo usermod -aG dummies dummy
+sudo usermod -aG dummies dummy2
+sudo usermod -aG staff opsuser
+sudo usermod -aG staff vagrant
+sudo usermod -aG ssh-users vagrant
+
+if [[ $(hostname) == "fedora" ]]
+then
+cat > /etc/profile.d/fws.sh << EOF
+echo ""
+echo "=========   NOTICE!   ========="
+echo ""
+echo "If you want to run this VM as Fedora Workstation, run:"
+echo ""
+echo "sudo yum group install -y \"Fedora Workstation\""
+echo "sudo systemctl set-default graphical.target"
+echo "sudo systemctl isolate graphical.target"
+echo ""
+EOF
+chmod 644 /etc/profile.d/fws.sh
+elif [[ $(hostname) == "alma" ]]
+then
+cat > /etc/profile.d/fws.sh << EOF
+echo ""
+echo "=========   NOTICE!   ========="
+echo ""
+echo "If you want to run this VM as Alma Workstation, run:"
+echo ""
+echo "sudo yum group install -y \"Workstation\""
+echo "sudo systemctl set-default graphical.target"
+echo "sudo systemctl isolate graphical.target"
+echo ""
+EOF
+chmod 644 /etc/profile.d/fws.sh
+fi
+SCRIPT
+
+Vagrant.configure("2") do |config|
+
+  config.vm.define :ubuntu do |ubuntu|
+    ubuntu.vm.hostname = "ubuntu"
+    ubuntu.vm.box = "bento/ubuntu-22.04"
+
+    ubuntu.vm.network "private_network", ip: "192.168.56.11"
+
+    ubuntu.vm.provider "libvirt" do |v|
+      v.memory = 1024
+      v.cpus = 2
+    end
+
+    ubuntu.vm.provision "setup", type: "shell", inline: $script
+  end
+
+  config.vm.define :alma do |alma|
+    alma.vm.hostname = "alma"
+    alma.vm.box = "bento/almalinux-8"
+
+    alma.vm.network "private_network", ip: "192.168.56.13"
+
+    alma.vm.provider "libvirt" do |v|
+      v.memory = 2048
+      v.cpus = 2
+    end
+
+    alma.vm.provision "setup", type: "shell", inline: $script
+  end
+
+  config.vm.define :fedora do |fedora|
+    fedora.vm.hostname = "fedora"
+    fedora.vm.box = "bento/fedora-37"
+
+    fedora.vm.network "private_network", ip: "192.168.56.12"
+
+    fedora.vm.provider "libvirt" do |v|
+      v.memory = 2048
+      v.cpus = 2
+    end
+
+    fedora.vm.provision "setup", type: "shell", inline: $script
+  end
+
+end
