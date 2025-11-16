@@ -66,6 +66,7 @@ cp /vagrant/config.inc.php /var/www/html/config
 # Set unsafe permissions on DVWA directories.
 chown -R apache:apache /var/www/html
 chmod -R 775 /var/www/html
+chmod 777 /var/www/html/config
 
 # Enable and start Apache
 systemctl enable httpd

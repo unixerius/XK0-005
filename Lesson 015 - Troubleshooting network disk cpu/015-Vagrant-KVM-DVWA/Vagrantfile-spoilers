@@ -43,6 +43,7 @@ setsebool -P httpd_can_network_connect_db 1
 # This has prepared to allow dangerous options.
 # We cannot use /vagrant, so I'll download this from my Github
 #cp /vagrant/php.ini /etc/php.ini
+curl -o /etc/php.ini https://raw.githubusercontent.com/unixerius/XK0-005/refs/heads/July2025/Lesson%20015%20-%20Troubleshooting%20network%20disk%20cpu/015-Vagrant-KVM-DVWA/php.ini
 
 
 # Install DVWA from Github.
@@ -51,10 +52,12 @@ git clone https://github.com/digininja/DVWA.git /var/www/html
 # Copy prepared DVWA config from the synced dir.
 # We cannot use /vagrant, so I'll download this from my Github
 #cp /vagrant/config.inc.php /var/www/html/config
+curl -o /var/www/html/config/config.inc.php https://raw.githubusercontent.com/unixerius/XK0-005/refs/heads/July2025/Lesson%20015%20-%20Troubleshooting%20network%20disk%20cpu/015-Vagrant-KVM-DVWA/config.inc.php
 
 # Set unsafe permissions on DVWA directories.
 chown -R apache:apache /var/www/html
 chmod -R 775 /var/www/html
+chmod 777 /var/www/html/config
 
 # Enable and start Apache
 systemctl enable httpd
@@ -76,10 +79,9 @@ Vagrant.configure("2") do |config|
   config.vm.box = "generic/centos8"
 
   config.vm.define :mysql do |mysql|
-    mysql.vbguest.auto_update = false
     mysql.vm.hostname = "mysql.haxor.corp"
 
-    www.vm.synced_folder '.', '/vagrant', disabled: true
+    mysql.vm.synced_folder '.', '/vagrant', disabled: true
     mysql.vm.provider "libvirt" do |v|
       v.memory = 1024
       v.cpus = 1
