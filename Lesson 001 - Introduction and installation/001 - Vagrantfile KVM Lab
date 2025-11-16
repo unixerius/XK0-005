@@ -1,8 +1,4 @@
 $script = <<-SCRIPT
-echo "192.168.56.11   ubuntu" >> /etc/hosts
-echo "192.168.56.12   fedora" >> /etc/hosts
-echo "192.168.56.13   alma" >> /etc/hosts
-
 if [[ $(hostname) == "fedora" || $(hostname) == "alma" ]]
 then
   systemctl enable sshd
@@ -67,7 +63,7 @@ Vagrant.configure("2") do |config|
     ubuntu.vm.hostname = "ubuntu"
     ubuntu.vm.box = "bento/ubuntu-22.04"
 
-    ubuntu.vm.network "private_network", ip: "192.168.56.11"
+    ubuntu.vm.synced_folder '.', '/vagrant', disabled: true
 
     ubuntu.vm.provider "libvirt" do |v|
       v.memory = 1024
@@ -81,7 +77,7 @@ Vagrant.configure("2") do |config|
     alma.vm.hostname = "alma"
     alma.vm.box = "bento/almalinux-8"
 
-    alma.vm.network "private_network", ip: "192.168.56.13"
+    alma.vm.synced_folder '.', '/vagrant', disabled: true
 
     alma.vm.provider "libvirt" do |v|
       v.memory = 2048
@@ -95,7 +91,7 @@ Vagrant.configure("2") do |config|
     fedora.vm.hostname = "fedora"
     fedora.vm.box = "bento/fedora-37"
 
-    fedora.vm.network "private_network", ip: "192.168.56.12"
+    fedora.vm.synced_folder '.', '/vagrant', disabled: true
 
     fedora.vm.provider "libvirt" do |v|
       v.memory = 2048

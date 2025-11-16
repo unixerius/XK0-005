@@ -1,0 +1,124 @@
+####################################
+#
+# Provision script for MySQL server.
+
+$mysqlscript = <<-SCRIPT
+
+# Create dir for synced data exchange with host OS.
+mkdir /vagrant 2>/dev/null
+
+# Add hostnames to /etc/hosts.
+echo "192.168.56.11 mysql mysql.haxor.corp" >> /etc/hosts
+echo "192.168.56.12 www www.haxor.corp" >> /etc/hosts
+
+# Install MariaDB, enable and start, plus open on the firewall.
+yum install -y mariadb-server 
+firewall-cmd --add-service=mysql --zone=public
+firewall-cmd --add-service=mysql --zone=public --permanent
+systemctl enable mariadb
+systemctl start mariadb; sleep 10
+
+# Create the database and user account for DVWA.
+# MariaDB root password is <blank> by default, which is why this works. 
+mysql -u root << EOF
+create database dvwa;
+create user dvwa@'%' identified by 'password';
+grant all on dvwa.* to dvwa@'%';
+flush privileges;
+EOF
+
+# End of script.
+SCRIPT
+
+####################################
+#
+# Provision script for Apache server with DVWA.
+
+$wwwscript = <<-SCRIPT
+# Create dir for synced data exchange with host OS.
+mkdir /vagrant 2>/dev/null
+
+# Add hostnames to /etc/hosts.
+echo "192.168.56.11 mysql mysql.haxor.corp" >> /etc/hosts
+echo "192.168.56.12 www.haxor.corp" >> /etc/hosts
+
+# Install Apache, MariaDB client and PHP plus modules
+# Also open up the firewall.
+yum install -y git mariadb httpd php php-mysqlnd php-gd 
+firewall-cmd --add-service=http --zone=public
+firewall-cmd --add-service=http --zone=public --permanent
+firewall-cmd --add-service=https --zone=public
+firewall-cmd --add-service=https --zone=public --permanent
+
+# Allow Apache to connect to MySQL on the network.
+setsebool -P httpd_can_network_connect_db 1
+
+# Copy the prepared php.ini from the synced dir. 
+# This has prepared to allow dangerous options.
+cp /vagrant/php.ini /etc/php.ini
+
+# Install DVWA from Github.
+git clone https://github.com/digininja/DVWA.git /var/www/html
+
+# Copy prepared DVWA config from the synced dir.
+cp /vagrant/config.inc.php /var/www/html/config
+
+# Set unsafe permissions on DVWA directories.
+chown -R apache:apache /var/www/html
+chmod -R 775 /var/www/html
+
+# Enable and start Apache
+systemctl enable httpd
+systemctl start httpd
+
+# End of script.
+SCRIPT
+
+
+####################################
+# 
+# Vagrant main configuration, creating two VMs.
+# Both VMs get /vagrant which is synced with this working dir. 
+# The working dir contains the Vagrantfile, plus two
+# prepared configuration files. 
+
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "generic/centos8"
+
+  config.vm.define :mysql do |mysql|
+    mysql.vbguest.auto_update = false
+    mysql.vm.hostname = "mysql.haxor.corp"
+    ###
+    # Switch these two, if Vagrant complains about "permission denied" in networking.
+    #mysql.vm.network "private_network", ip: "192.168.56.11", virtualbox__intnet: "dvwanet"
+    mysql.vm.network "private_network", ip: "192.168.56.11"
+    ###
+    mysql.vm.synced_folder ".", "/vagrant"
+    mysql.vm.provider "virtualbox" do |v|
+      v.memory = 1024
+      v.cpus = 1
+    end
+    mysql.vm.provision "setup", type: "shell", inline: $mysqlscript
+  end
+
+  config.vm.define :www do |www|
+    www.vbguest.auto_update = false
+    www.vm.hostname = "www.haxor.corp"
+    ###
+    # Switch these two, if Vagrant complains about "permission denied" in networking.
+    #www.vm.network "private_network", ip: "192.168.56.12", virtualbox__intnet: "dvwanet"
+    www.vm.network "private_network", ip: "192.168.56.12"
+    ###
+    www.vm.network "forwarded_port", guest: 80, host: 8080
+    www.vm.synced_folder ".", "/vagrant"
+    www.vm.provider "virtualbox" do |v|
+      v.memory = 512
+      v.cpus = 1
+    end
+    www.vm.provision "setup", type: "shell", inline: $wwwscript
+  end
+
+end
+
+

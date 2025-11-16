@@ -1,0 +1,72 @@
+####################################
+#
+# Provision script for MySQL server.
+
+$mysqlscript = <<-SCRIPT
+# Fill in the rest here...
+
+# End of script.
+SCRIPT
+
+####################################
+#
+# Provision script for Apache server with DVWA.
+
+$wwwscript = <<-SCRIPT
+# Fill in the rest here...
+
+# End of script.
+SCRIPT
+
+
+####################################
+# 
+# Vagrant main configuration, creating two VMs.
+# Both VMs get /vagrant which is synced with this working dir. 
+# The working dir contains the Vagrantfile, plus two
+# prepared configuration files. 
+
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "generic/centos8"
+
+  config.vm.define :mysql do |mysql|
+    if Vagrant.has_plugin?("vagrant-vbguest")
+      mysql.vbguest.auto_update = false
+    end
+    mysql.vm.hostname = "mysql.haxor.corp"
+
+    # Synced folders under Linux requires NFS server and firewall ports to open.
+    # For now I'll skip it. You will have to upload files in anothery way.
+    #mysql.vm.synced_folder ".", "/vagrant"
+    mysql.vm.synced_folder '.', '/vagrant', disabled: true
+    mysql.vm.provider "libvirt" do |v|
+      v.memory = 1024
+      v.cpus = 1
+    end
+    mysql.vm.provision "setup", type: "shell", inline: $mysqlscript
+  end
+
+  config.vm.define :www do |www|
+    if Vagrant.has_plugin?("vagrant-vbguest")
+      www.vbguest.auto_update = false
+    end
+    www.vm.hostname = "www.haxor.corp"
+    
+    # Under KVM / LibVirt we don't use the NAT network, nor port forwards.
+    #www.vm.network :forwarded_port, :guest => 80, :host => 8080
+
+    # Synced folders under Linux requires NFS server and firewall ports to open.
+    # For now I'll skip it. You will have to upload files in anothery way.
+    #www.vm.synced_folder ".", "/vagrant"
+    www.vm.synced_folder '.', '/vagrant', disabled: true
+    www.vm.provider "libvirt" do |v|
+      v.memory = 512
+      v.cpus = 1
+    end
+    www.vm.provision "setup", type: "shell", inline: $wwwscript
+  end
+
+end
+
+
