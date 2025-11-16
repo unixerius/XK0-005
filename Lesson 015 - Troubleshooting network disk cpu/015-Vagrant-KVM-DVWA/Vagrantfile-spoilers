@@ -43,8 +43,7 @@ setsebool -P httpd_can_network_connect_db 1
 # This has prepared to allow dangerous options.
 # We cannot use /vagrant, so I'll download this from my Github
 #cp /vagrant/php.ini /etc/php.ini
-curl -o /etc/php.ini https://raw.githubusercontent.com/unixerius/XK0-005/refs/heads/July2025/Lesson%20015%20-%20Troubleshooting%20network%20disk%20cpu/015-Vagrant-KVM-DVWA/php.ini
-
+curl -o /etc/php.ini https://raw.githubusercontent.com/unixerius/XK0-005/refs/heads/main/Lesson%20015%20-%20Troubleshooting%20network%20disk%20cpu/015-Vagrant-KVM-DVWA/php.ini
 
 # Install DVWA from Github.
 git clone https://github.com/digininja/DVWA.git /var/www/html
@@ -52,7 +51,7 @@ git clone https://github.com/digininja/DVWA.git /var/www/html
 # Copy prepared DVWA config from the synced dir.
 # We cannot use /vagrant, so I'll download this from my Github
 #cp /vagrant/config.inc.php /var/www/html/config
-curl -o /var/www/html/config/config.inc.php https://raw.githubusercontent.com/unixerius/XK0-005/refs/heads/July2025/Lesson%20015%20-%20Troubleshooting%20network%20disk%20cpu/015-Vagrant-KVM-DVWA/config.inc.php
+curl -o /var/www/html/config/config.inc.php https://raw.githubusercontent.com/unixerius/XK0-005/refs/heads/main/Lesson%20015%20-%20Troubleshooting%20network%20disk%20cpu/015-Vagrant-KVM-DVWA/config.inc.php
 
 # Set unsafe permissions on DVWA directories.
 chown -R apache:apache /var/www/html
